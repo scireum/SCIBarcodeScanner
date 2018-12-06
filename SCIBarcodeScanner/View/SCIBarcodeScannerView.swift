@@ -16,19 +16,19 @@ public class SCIBarcodeScannerView: UIView {
     private var captureSession: AVCaptureSession = AVCaptureSession()
     private var captureDevice: AVCaptureDevice?
     private var videoPreviewLayer: AVCaptureVideoPreviewLayer?
-    
+
     private var supportedCodeTypes: [AVMetadataObject.ObjectType]?
     public var scanBox: CALayer?
-    
+
     public var scanMode: BarcodeScannerMode = .singleShot
-    
+
     public var isTorchModeAvailable: Bool {
         get {
             guard let device = AVCaptureDevice.default(for: AVMediaType.video) else { return false }
             return device.hasTorch
         }
     }
-    
+
     private var torchMode: TorchMode = .off {
         didSet {
             guard let captureDevice = self.captureDevice, captureDevice.hasTorch else { return }
@@ -40,28 +40,26 @@ public class SCIBarcodeScannerView: UIView {
             } catch {}
         }
     }
-    
+
     public func setCodesTypes(avmetaDataArray: [AVMetadataObject.ObjectType]) {
         self.supportedCodeTypes = avmetaDataArray
     }
-    
+
     private func setupCodeTypes() {
         if self.supportedCodeTypes == nil {
             self.supportedCodeTypes = AVMetadataObject.ObjectType.all
         }
     }
-    
+
     public override func willMove(toSuperview newSuperview: UIView?) {
         self.setupCodeTypes()
         self.checkPermissions()
     }
-    
-    
-    
+
     public func toggleTorch() {
         self.torchMode = self.torchMode.toggle
     }
-    
+
     private func checkPermissions() {
         if AVCaptureDevice.authorizationStatus(for: .video) ==  .authorized {
             setupCamera()
@@ -77,7 +75,7 @@ public class SCIBarcodeScannerView: UIView {
             })
         }
     }
-    
+
     private func setupCamera() {
         if #available(iOS 10.0, *) {
             let deviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera], mediaType: AVMediaType.video, position: .back)
@@ -93,29 +91,29 @@ public class SCIBarcodeScannerView: UIView {
             }
             self.captureDevice = camera
         }
-        
+
         do {
-            
+
             // Get an instance of the AVCaptureDeviceInput class using the previous device object.
             let input = try AVCaptureDeviceInput(device: self.captureDevice!)
-            
+
             // Set the input device on the capture session.
             self.captureSession.addInput(input)
-            
+
             // Initialize a AVCaptureMetadataOutput object and set it as the output device to the capture session.
             let captureMetadataOutput = AVCaptureMetadataOutput()
             self.captureSession.addOutput(captureMetadataOutput)
-            
+
             // Set delegate and use the default dispatch queue to execute the call back
             captureMetadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
             captureMetadataOutput.metadataObjectTypes = supportedCodeTypes
-            
+
         } catch {
             // If any error occurs, simply print it out and don't continue any more.
             print(error)
             return
         }
-        
+
         // Initialize the video preview layer and add it as a sublayer to the viewPreview view's layer.
         self.videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         self.videoPreviewLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
@@ -125,12 +123,12 @@ public class SCIBarcodeScannerView: UIView {
         self.startCapture()
         self.setupScanBox()
     }
-    
+
     private func startCapture() {
         self.captureSession.startRunning()
         self.torchMode = .off
     }
-    
+
     private func getDevice(position: AVCaptureDevice.Position) -> AVCaptureDevice? {
         let devices = AVCaptureDevice.devices()
         for device in devices {
@@ -141,7 +139,7 @@ public class SCIBarcodeScannerView: UIView {
         }
         return nil
     }
-    
+
     private func setupScanBox() {
         scanBox = CALayer()
         if let box = self.scanBox {
@@ -149,7 +147,7 @@ public class SCIBarcodeScannerView: UIView {
             box.contentsGravity = .resizeAspect
             self.videoPreviewLayer?.addSublayer(box)
         }
-        
+
         if let preview = self.videoPreviewLayer {
             let width: CGFloat = 280.0
             scanBox?.bounds = CGRect(origin: .zero,
@@ -157,7 +155,7 @@ public class SCIBarcodeScannerView: UIView {
             scanBox?.position = preview.position
         }
     }
-    
+
     public func stopCapture() {
         self.captureSession.stopRunning()
         self.torchMode = .off

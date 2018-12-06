@@ -4,7 +4,7 @@ import AVFoundation
 public enum TorchMode {
     case on
     case off
-    
+
     var toggle: TorchMode {
         switch self {
         case .on:
@@ -13,7 +13,7 @@ public enum TorchMode {
             return .on
         }
     }
-    
+
     var captureTorchMode: AVCaptureDevice.TorchMode {
         switch self {
         case .on:

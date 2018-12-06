@@ -13,10 +13,8 @@ class ViewController: UIViewController, SCIBarcodeScannerViewDelegate {
     func sciBarcodeScannerViewReceived(code: String, type: String) {
         print(code)
     }
-    
+
     func sciBarcodeScannerViewCanceled() {
         print("test")
     }
-
 }
-

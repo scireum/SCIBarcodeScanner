@@ -1,7 +1,7 @@
 import AVFoundation
 
 extension AVMetadataObject.ObjectType {
-    
+
     //All code types
     public static var all = [
         AVMetadataObject.ObjectType.aztec,
