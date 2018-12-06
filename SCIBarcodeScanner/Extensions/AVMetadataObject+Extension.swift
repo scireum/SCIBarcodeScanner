@@ -16,6 +16,7 @@ extension AVMetadataObject.ObjectType {
         AVMetadataObject.ObjectType.interleaved2of5,
         AVMetadataObject.ObjectType.itf14,
         AVMetadataObject.ObjectType.pdf417,
-        AVMetadataObject.ObjectType.qr
+        AVMetadataObject.ObjectType.qr,
+        AVMetadataObject.ObjectType.upce
     ]
 }
