@@ -10,7 +10,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Barcode Scanner-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="SCIBarcodeScannerExample" customModuleProvider="target" sceneMemberID="viewController">
@@ -32,9 +32,16 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
-                    <navigationItem key="navigationItem" id="f2m-CG-70J"/>
+                    <navigationItem key="navigationItem" title="Barcode Scanner" id="wVI-iL-L8X">
+                        <barButtonItem key="rightBarButtonItem" title="Torch" id="f06-VL-SKN">
+                            <connections>
+                                <action selector="toggleTorch:" destination="BYZ-38-t0r" id="cZB-PG-PFz"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="scannerFrame" destination="pZc-H6-KM2" id="18T-rj-BPT"/>
+                        <outlet property="torchButton" destination="f06-VL-SKN" id="4kx-Pi-wtb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
