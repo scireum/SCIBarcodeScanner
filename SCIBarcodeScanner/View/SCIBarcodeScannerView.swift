@@ -29,7 +29,7 @@ public class SCIBarcodeScannerView: UIView {
         }
     }
 
-    private var torchMode: TorchMode = .off {
+    public var torchMode: TorchMode = .off {
         didSet {
             guard let captureDevice = self.captureDevice, captureDevice.hasTorch else { return }
             guard captureDevice.isTorchModeSupported(torchMode.captureTorchMode) else { return }

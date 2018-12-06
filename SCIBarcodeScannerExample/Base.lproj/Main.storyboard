@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="G2J-B4-Okn">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -10,22 +10,61 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Barcode Scanner-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="SCIBarcodeScannerExample" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC" customClass="SCIBarcodeScannerView" customModule="SCIBarcodeScanner">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pZc-H6-KM2" customClass="SCIBarcodeScannerView" customModule="SCIBarcodeScanner">
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="pZc-H6-KM2" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="0f8-kg-fee"/>
+                            <constraint firstItem="pZc-H6-KM2" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="8jm-Ef-SkR"/>
+                            <constraint firstItem="pZc-H6-KM2" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="ecK-m7-1pr"/>
+                            <constraint firstItem="pZc-H6-KM2" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="jH7-f8-noO"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <navigationItem key="navigationItem" title="Barcode Scanner" id="wVI-iL-L8X">
+                        <barButtonItem key="rightBarButtonItem" title="Torch" id="f06-VL-SKN">
+                            <connections>
+                                <action selector="toggleTorch:" destination="BYZ-38-t0r" id="cZB-PG-PFz"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
-                        <outlet property="scannerFrame" destination="8bC-Xf-vdC" id="Dv4-P7-h2H"/>
+                        <outlet property="scannerFrame" destination="pZc-H6-KM2" id="18T-rj-BPT"/>
+                        <outlet property="torchButton" destination="f06-VL-SKN" id="4kx-Pi-wtb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="928.79999999999995" y="-564.46776611694156"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Qah-k4-DV5">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="G2J-B4-Okn" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="m29-lH-qTf">
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="S24-IR-OsW"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="87G-Tr-67f" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="136.80000000000001" y="-564.46776611694156"/>
         </scene>
     </scenes>
 </document>
