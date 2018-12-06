@@ -2,7 +2,9 @@ import AVFoundation
 
 extension AVMetadataObject.ObjectType {
 
-    //All code types
+    /**
+     List of all supported code types.
+     */
     public static var all = [
         AVMetadataObject.ObjectType.aztec,
         AVMetadataObject.ObjectType.code128,

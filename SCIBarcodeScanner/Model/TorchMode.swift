@@ -5,6 +5,9 @@ public enum TorchMode {
     case on
     case off
 
+    /**
+     Returns the toggled state.
+     */
     var toggle: TorchMode {
         switch self {
         case .on:
@@ -14,6 +17,9 @@ public enum TorchMode {
         }
     }
 
+    /**
+     Returns the matching low-level torch mode.
+     */
     var captureTorchMode: AVCaptureDevice.TorchMode {
         switch self {
         case .on:
