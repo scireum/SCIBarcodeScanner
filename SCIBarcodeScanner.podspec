@@ -1,12 +1,12 @@
 Pod::Spec.new do |s|
 s.name         = 'SCIBarcodeScanner'
-s.version      = '1.1.0'
+s.version      = '1.0.0'
 s.summary      = 'Barcode scanner'
 s.description  = <<-DESC
 Barcode Scanner
 DESC
 s.homepage     = 'https://github.com/scireum/SCIBarcodeScanner.git'
-s.license      = { :type => 'MIT', :file => 'LICENSE' }
+s.license      = { :type => 'MIT' }
 s.author       = { 'scireum' => 'info+dev@scireum.de'}
 s.source       = { :git => 'https://github.com/scireum/SCIBarcodeScanner.git', :tag => "#{s.version}" }
 # 8
