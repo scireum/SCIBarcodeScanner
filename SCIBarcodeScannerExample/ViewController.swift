@@ -14,6 +14,7 @@ class ViewController: UIViewController, SCIBarcodeScannerViewDelegate {
     }
 
     @IBAction func toggleTorch(_ sender: Any?) {
+        self.scannerFrame.toggleTorch()
     }
 
     func sciBarcodeScannerViewReceived(code: String, type: String) {
