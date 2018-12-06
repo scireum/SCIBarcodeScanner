@@ -2,6 +2,10 @@ import Foundation
 import UIKit
 import AVFoundation
 
+public enum BarcodeScannerMode {
+    case singleShot
+}
+
 public protocol SCIBarcodeScannerViewDelegate {
     func sciBarcodeScannerViewReceived(code: String, type: String)
     func sciBarcodeScannerViewCanceled()
@@ -14,8 +18,9 @@ public class SCIBarcodeScannerView: UIView {
     private var videoPreviewLayer: AVCaptureVideoPreviewLayer?
     
     private var supportedCodeTypes: [AVMetadataObject.ObjectType]?
-    private var scanBox: CALayer?
-    let qrCodeFrameView = UIView()
+    public var scanBox: CALayer?
+    
+    public var scanMode: BarcodeScannerMode = .singleShot
     
     public var isTorchModeAvailable: Bool {
         get {
@@ -116,20 +121,8 @@ public class SCIBarcodeScannerView: UIView {
         self.videoPreviewLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
         self.videoPreviewLayer?.frame = self.layer.bounds
         self.layer.addSublayer(self.videoPreviewLayer!)
-        
-        
-        
-        
+
         self.startCapture()
-        
-        
-        
-//        if let qrCodeFrameView: UIView = qrCodeFrameView {
-//            qrCodeFrameView.layer.borderColor = UIColor.green.cgColor
-//            qrCodeFrameView.layer.borderWidth = 2
-//            self.addSubview(qrCodeFrameView)
-//            self.bringSubviewToFront(qrCodeFrameView)
-//        }
         self.setupScanBox()
     }
     
@@ -138,7 +131,7 @@ public class SCIBarcodeScannerView: UIView {
         self.torchMode = .off
     }
     
-    func getDevice(position: AVCaptureDevice.Position) -> AVCaptureDevice? {
+    private func getDevice(position: AVCaptureDevice.Position) -> AVCaptureDevice? {
         let devices = AVCaptureDevice.devices()
         for device in devices {
             let deviceConverted = device
@@ -149,13 +142,25 @@ public class SCIBarcodeScannerView: UIView {
         return nil
     }
     
-    public func setupScanBox() {
+    private func setupScanBox() {
         scanBox = CALayer()
         if let box = self.scanBox {
             box.contents = UIImage(named: "Standard")?.cgImage
             box.contentsGravity = .resizeAspect
             self.videoPreviewLayer?.addSublayer(box)
         }
+        
+        if let preview = self.videoPreviewLayer {
+            let width: CGFloat = 280.0
+            scanBox?.bounds = CGRect(origin: .zero,
+                                    size: CGSize(width: width, height: width))
+            scanBox?.position = preview.position
+        }
+    }
+    
+    public func stopCapture() {
+        self.captureSession.stopRunning()
+        self.torchMode = .off
     }
 }
 
@@ -163,35 +168,19 @@ extension SCIBarcodeScannerView: AVCaptureMetadataOutputObjectsDelegate {
     public func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
         // Check if the metadataObjects array is not nil and it contains at least one object.
         if metadataObjects.count == 0 {
-            qrCodeFrameView.frame = CGRect.zero
             return
-        }
-        
-//        // Get the metadata object.
-//        if let metadataObj: AVMetadataMachineReadableCodeObject = metadataObjects.first as? AVMetadataMachineReadableCodeObject {
-//            if supportedCodeTypes?.contains(metadataObj.type) ?? false {
-//                // If the found metadata is equal to the QR code metadata (or barcode) then update the status label's text and set the bounds
-//                let barCodeObject = videoPreviewLayer?.transformedMetadataObject(for: metadataObj)
-//                qrCodeFrameView.frame = barCodeObject!.bounds
-//
-//                if metadataObj.stringValue != nil {
-//                    self.delegate?.sciBarcodeScannerViewReceived(code: metadataObj.stringValue!, type: metadataObj.type.rawValue)
-//                }
-//            }
-//        }
-        
-        
-        else {
+        } else {
             // Get the metadata object.
             if let metadataObj: AVMetadataMachineReadableCodeObject = metadataObjects.first as? AVMetadataMachineReadableCodeObject {
                 if supportedCodeTypes?.contains(metadataObj.type) ?? false {
                     if let barCodeObject = videoPreviewLayer?.transformedMetadataObject(for: metadataObj) {
                         if self.scanBox?.frame.contains(barCodeObject.bounds) ?? false {
                             if metadataObj.stringValue != nil {
-                                DispatchQueue.main.sync {
-                                    self.scanBox!.contents = UIImage(named:"Success")?.cgImage
-                                    self.delegate?.sciBarcodeScannerViewReceived(code: metadataObj.stringValue!, type: metadataObj.type.rawValue)
+                                if self.scanMode == .singleShot {
+                                    self.stopCapture()
                                 }
+                                self.scanBox!.contents = UIImage(named:"Success")?.cgImage
+                                self.delegate?.sciBarcodeScannerViewReceived(code: metadataObj.stringValue!, type: metadataObj.type.rawValue)
                             }
                         }
                     }
