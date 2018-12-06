@@ -1,11 +1,3 @@
-//
-//  AppDelegate.swift
-//  SCIBarcodeScannerExample
-//
-//  Created by Maxim Schleicher on 06.12.18.
-//  Copyright © 2018 scireum GmbH. All rights reserved.
-//
-
 import UIKit
 
 @UIApplicationMain
