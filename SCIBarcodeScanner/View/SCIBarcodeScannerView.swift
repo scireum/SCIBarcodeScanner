@@ -10,6 +10,11 @@ public protocol SCIBarcodeScannerViewDelegate {
 public class SCIBarcodeScannerView: UIView {
     public var delegate: SCIBarcodeScannerViewDelegate?
 
+    private var alertMessage: String = "Camera access"
+    private var alertTitle: String = "In order for the barcode scanner to work, please allow access to the camera in the settings."
+    private var alertCancel: String = "Cancel"
+    private var alertConfirm: String = "Settings"
+
     private var captureSession: AVCaptureSession = AVCaptureSession()
     private var captureDevice: AVCaptureDevice?
 
@@ -83,10 +88,10 @@ public class SCIBarcodeScannerView: UIView {
                         this.setupCamera()
                     }
                 } else {
-                    let alert = UIAlertController(title: NSLocalizedString("camera.authorization.title", comment: ""),
-                                                  message: NSLocalizedString("camera.authorization.reason", comment: ""),
+                    let alert = UIAlertController(title: self?.alertTitle,
+                                                  message: self?.alertMessage,
                                                   preferredStyle: UIAlertController.Style.alert)
-                    alert.addAction(UIAlertAction(title: NSLocalizedString("camera.authorization.settings", comment: ""), style: UIAlertAction.Style.default, handler: { (action) in
+                    alert.addAction(UIAlertAction(title: self?.alertConfirm, style: UIAlertAction.Style.default, handler: { (action) in
                         guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else { return }
                         if UIApplication.shared.canOpenURL(settingsUrl) {
                             UIApplication.shared.open(settingsUrl, options: [:], completionHandler: { (success) in
@@ -94,7 +99,7 @@ public class SCIBarcodeScannerView: UIView {
                             })
                         }
                     }))
-                    alert.addAction(UIAlertAction(title: NSLocalizedString("generic.cancel", comment: ""), style: UIAlertAction.Style.cancel, handler: { (action) in
+                    alert.addAction(UIAlertAction(title: self?.alertCancel, style: UIAlertAction.Style.cancel, handler: { (action) in
                         guard let this = self else { return }
                         DispatchQueue.main.async {
                             this.delegate?.sciBarcodeScannerCanceledPermissions()
@@ -111,6 +116,13 @@ public class SCIBarcodeScannerView: UIView {
                 }
             })
         }
+    }
+
+    public func setupAlertForSettings(title: String, message: String, confirm: String, cancel: String) {
+        self.alertTitle = title
+        self.alertMessage = message
+        self.alertConfirm = confirm
+        self.alertCancel = cancel
     }
 
     private func setupCamera() {
