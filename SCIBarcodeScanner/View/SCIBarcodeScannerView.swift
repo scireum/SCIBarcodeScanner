@@ -144,6 +144,15 @@ public class SCIBarcodeScannerView: UIView {
             self.videoPreviewLayer?.addSublayer(box)
         }
 
+        self.layoutScanBox()
+    }
+
+    public func stopCapture() {
+        self.captureSession.stopRunning()
+        self.torchMode = .off
+    }
+
+    private func layoutScanBox() {
         if let preview = self.videoPreviewLayer {
             let width: CGFloat = 280.0
             scanBox?.bounds = CGRect(origin: .zero,
@@ -152,9 +161,26 @@ public class SCIBarcodeScannerView: UIView {
         }
     }
 
-    public func stopCapture() {
-        self.captureSession.stopRunning()
-        self.torchMode = .off
+    public override func layoutSubviews() {
+        self.rotateVideoLayer()
+    }
+
+    private func rotateVideoLayer() {
+        guard let videoLayer = self.videoPreviewLayer else {
+            return
+        }
+
+        videoLayer.frame = self.layer.bounds
+
+        if let connection = videoLayer.connection, connection.isVideoOrientationSupported {
+            switch UIApplication.shared.statusBarOrientation {
+                case .portrait: connection.videoOrientation = .portrait
+                case .landscapeRight: connection.videoOrientation = .landscapeRight
+                case .landscapeLeft: connection.videoOrientation = .landscapeLeft
+                case .portraitUpsideDown: connection.videoOrientation = .portraitUpsideDown
+                default: connection.videoOrientation = .portrait
+            }
+        }
     }
 }
 
