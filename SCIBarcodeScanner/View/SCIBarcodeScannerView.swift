@@ -10,10 +10,10 @@ public protocol SCIBarcodeScannerViewDelegate {
 public class SCIBarcodeScannerView: UIView {
     public var delegate: SCIBarcodeScannerViewDelegate?
 
-    private var alertTitle: String = "Camera access"
-    private var alertMessage: String = "In order for the barcode scanner to work, please allow access to the camera in the settings."
-    private var alertCancel: String = "Cancel"
-    private var alertConfirm: String = "Settings"
+    public var alertTitle: String = "Camera Access"
+    public var alertMessage: String = "In order for the barcode scanner to work, please allow access to the camera in the settings."
+    public var alertCancel: String = "Cancel"
+    public var alertConfirm: String = "Settings"
 
     private var captureSession: AVCaptureSession = AVCaptureSession()
     private var captureDevice: AVCaptureDevice?
