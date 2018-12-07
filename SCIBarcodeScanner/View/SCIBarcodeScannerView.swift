@@ -246,7 +246,7 @@ extension SCIBarcodeScannerView: AVCaptureMetadataOutputObjectsDelegate {
 
         // obtain the type, and make sure that we support it
         let barcodeType = metadataObj.type
-        let type = barcodeType.rawValue
+        let type = barcodeType.mapBarcode()
         guard supportedCodeTypes?.contains(barcodeType) == true else { return }
 
         // obtain the code, and make sure that we haven't already seen it
