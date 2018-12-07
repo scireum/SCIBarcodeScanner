@@ -182,6 +182,8 @@ extension SCIBarcodeScannerView: AVCaptureMetadataOutputObjectsDelegate {
 
         DispatchQueue.main.async {
             self.scanBox!.contents = self.successImage?.cgImage
+            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+
             if nil == self.timer {
                 self.timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { [weak self] (timer) in
                     // reset the timer again
@@ -189,7 +191,6 @@ extension SCIBarcodeScannerView: AVCaptureMetadataOutputObjectsDelegate {
                     self?.timer = nil
 
                     // forward the result to the delegate
-                    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
                     self?.delegate?.sciBarcodeScannerViewReceived(code: code, type: type)
 
                     // reset the overlay
