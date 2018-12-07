@@ -21,6 +21,9 @@ public class SCIBarcodeScannerView: UIView {
 
     private let metadataQueue = DispatchQueue(label: "com.scireum.scanner.metadataQueue")
 
+    private var standardImage: UIImage?
+    private var successImage: UIImage?
+
     public var isTorchModeAvailable: Bool {
         get {
             guard let device = AVCaptureDevice.default(for: AVMediaType.video) else { return false }
@@ -147,9 +150,13 @@ public class SCIBarcodeScannerView: UIView {
     }
 
     private func setupScanBox() {
+        let bundle = Bundle(for: type(of: self))
+        standardImage = UIImage(named: "Standard", in: bundle, compatibleWith: nil)
+        successImage = UIImage(named: "Success", in: bundle, compatibleWith: nil)
+
         scanBox = CALayer()
         if let box = self.scanBox {
-            box.contents = UIImage(named: "Standard")?.cgImage
+            box.contents = standardImage?.cgImage
             box.contentsGravity = .resizeAspect
             self.videoPreviewLayer?.addSublayer(box)
         }
@@ -191,7 +198,7 @@ extension SCIBarcodeScannerView: AVCaptureMetadataOutputObjectsDelegate {
         mostRecentCode = code
 
         DispatchQueue.main.async {
-            self.scanBox!.contents = UIImage(named:"Success")?.cgImage
+            self.scanBox!.contents = self.successImage?.cgImage
             self.delegate?.sciBarcodeScannerViewReceived(code: code, type: type)
         }
     }
