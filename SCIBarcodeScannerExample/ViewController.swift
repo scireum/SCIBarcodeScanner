@@ -18,6 +18,10 @@ class ViewController: UIViewController {
         }
     }
 
+    override func viewWillDisappear(_ animated: Bool) {
+        self.scannerFrame.stopCapture()
+    }
+
     @IBAction func toggleTorch(_ sender: Any?) {
         self.scannerFrame.toggleTorch()
         setTorchButtonTitle()
@@ -38,7 +42,6 @@ class ViewController: UIViewController {
 extension ViewController: SCIBarcodeScannerViewDelegate {
 
     func sciBarcodeScannerViewReceived(code: String, type: String) {
-        scannerFrame.stopCapture()
         print(code)
     }
 
