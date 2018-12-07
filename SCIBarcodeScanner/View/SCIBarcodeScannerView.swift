@@ -86,20 +86,12 @@ public class SCIBarcodeScannerView: UIView {
     }
 
     private func setupCamera() {
-        if #available(iOS 10.0, *) {
-            let deviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera], mediaType: AVMediaType.video, position: .back)
-            guard let camera = deviceDiscoverySession.devices.first else {
-                print("Failed to get the camera device")
-                return
-            }
-            self.captureDevice = camera
-        } else {
-            guard let camera = getDevice(position: .back) else {
-                print("Failed to get the camera device")
-                return
-            }
-            self.captureDevice = camera
+        let deviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera], mediaType: AVMediaType.video, position: .back)
+        guard let camera = deviceDiscoverySession.devices.first else {
+            print("Failed to get the camera device")
+            return
         }
+        self.captureDevice = camera
 
         do {
 
@@ -136,17 +128,6 @@ public class SCIBarcodeScannerView: UIView {
     private func startCapture() {
         self.captureSession.startRunning()
         self.torchMode = .off
-    }
-
-    private func getDevice(position: AVCaptureDevice.Position) -> AVCaptureDevice? {
-        let devices = AVCaptureDevice.devices()
-        for device in devices {
-            let deviceConverted = device
-            if(deviceConverted.position == position){
-                return deviceConverted
-            }
-        }
-        return nil
     }
 
     private func setupScanBox() {
