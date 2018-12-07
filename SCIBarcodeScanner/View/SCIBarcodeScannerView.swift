@@ -9,12 +9,14 @@ public protocol SCIBarcodeScannerViewDelegate {
 
 public class SCIBarcodeScannerView: UIView {
     public var delegate: SCIBarcodeScannerViewDelegate?
+
     private var captureSession: AVCaptureSession = AVCaptureSession()
     private var captureDevice: AVCaptureDevice?
+
     private var videoPreviewLayer: AVCaptureVideoPreviewLayer?
+    private var scanBox: CALayer?
 
     private var supportedCodeTypes: [AVMetadataObject.ObjectType]?
-    public var scanBox: CALayer?
 
     public var isTorchModeAvailable: Bool {
         get {
