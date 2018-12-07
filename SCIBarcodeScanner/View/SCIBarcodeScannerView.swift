@@ -2,10 +2,6 @@ import Foundation
 import UIKit
 import AVFoundation
 
-public enum BarcodeScannerMode {
-    case singleShot
-}
-
 public protocol SCIBarcodeScannerViewDelegate {
     func sciBarcodeScannerViewReceived(code: String, type: String)
     func sciBarcodeScannerViewCanceled()
@@ -19,8 +15,6 @@ public class SCIBarcodeScannerView: UIView {
 
     private var supportedCodeTypes: [AVMetadataObject.ObjectType]?
     public var scanBox: CALayer?
-
-    public var scanMode: BarcodeScannerMode = .singleShot
 
     public var isTorchModeAvailable: Bool {
         get {
@@ -174,9 +168,6 @@ extension SCIBarcodeScannerView: AVCaptureMetadataOutputObjectsDelegate {
                     if let barCodeObject = videoPreviewLayer?.transformedMetadataObject(for: metadataObj) {
                         if self.scanBox?.frame.contains(barCodeObject.bounds) ?? false {
                             if metadataObj.stringValue != nil {
-                                if self.scanMode == .singleShot {
-                                    self.stopCapture()
-                                }
                                 self.scanBox!.contents = UIImage(named:"Success")?.cgImage
                                 self.delegate?.sciBarcodeScannerViewReceived(code: metadataObj.stringValue!, type: metadataObj.type.rawValue)
                             }

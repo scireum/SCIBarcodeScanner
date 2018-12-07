@@ -35,6 +35,7 @@ class ViewController: UIViewController, SCIBarcodeScannerViewDelegate {
     }
 
     func sciBarcodeScannerViewReceived(code: String, type: String) {
+        scannerFrame.stopCapture()
         print(code)
     }
 
