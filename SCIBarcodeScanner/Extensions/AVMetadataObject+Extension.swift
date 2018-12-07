@@ -53,10 +53,10 @@ extension AVMetadataObject.ObjectType {
             case .face: return "FACE"
             case .code39Mod43: return "CODE_39_MODE_43"
             case .interleaved2of5: return "INTERLEAVED_2_OF_5"
-                //case kBarcodeFormatMaxiCode: return "MAXICODE";
-                //case kBarcodeFormatRSS14: return "RSS_14";
-                //case kBarcodeFormatRSSExpanded: return "RSS_EXPANDED";
-                //case kBarcodeFormatUPCA: return "UPC_A";
+            //case kBarcodeFormatMaxiCode: return "MAXICODE";
+            //case kBarcodeFormatRSS14: return "RSS_14";
+            //case kBarcodeFormatRSSExpanded: return "RSS_EXPANDED";
+            //case kBarcodeFormatUPCA: return "UPC_A";
             //case kBarcodeFormatUPCEANExtension: return "UPC_EAN_EXTENSION";
             default: return self.rawValue
         }
