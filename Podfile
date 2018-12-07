@@ -1,6 +1,7 @@
 platform :ios, '10.0'
 
-use_frameworks!
+# enable to check bundling of resources
+# use_frameworks!
 
 source 'https://github.com/CocoaPods/Specs.git'
 target "SCIBarcodeScannerExample" do
