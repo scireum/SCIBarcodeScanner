@@ -41,8 +41,4 @@ extension ViewController: SCIBarcodeScannerViewDelegate {
         scannerFrame.stopCapture()
         print(code)
     }
-
-    func sciBarcodeScannerViewCanceled() {
-        print("test")
-    }
 }

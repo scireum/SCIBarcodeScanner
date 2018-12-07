@@ -4,7 +4,6 @@ import AVFoundation
 
 public protocol SCIBarcodeScannerViewDelegate {
     func sciBarcodeScannerViewReceived(code: String, type: String)
-    func sciBarcodeScannerViewCanceled()
 }
 
 public class SCIBarcodeScannerView: UIView {
