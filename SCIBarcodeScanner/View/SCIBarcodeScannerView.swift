@@ -4,10 +4,16 @@ import AVFoundation
 
 public protocol SCIBarcodeScannerViewDelegate {
     func sciBarcodeScannerViewReceived(code: String, type: String)
+    func sciBarcodeScannerCanceledPermissions()
 }
 
 public class SCIBarcodeScannerView: UIView {
     public var delegate: SCIBarcodeScannerViewDelegate?
+
+    private var alertTitle: String = "Camera access"
+    private var alertMessage: String = "In order for the barcode scanner to work, please allow access to the camera in the settings."
+    private var alertCancel: String = "Cancel"
+    private var alertConfirm: String = "Settings"
 
     private var captureSession: AVCaptureSession = AVCaptureSession()
     private var captureDevice: AVCaptureDevice?
@@ -75,16 +81,48 @@ public class SCIBarcodeScannerView: UIView {
         if AVCaptureDevice.authorizationStatus(for: .video) ==  .authorized {
             setupCamera()
         } else {
-            AVCaptureDevice.requestAccess(for: .video, completionHandler: { (granted: Bool) in
+            AVCaptureDevice.requestAccess(for: .video, completionHandler: { [weak self] (granted: Bool) in
                 if granted {
                     DispatchQueue.main.async {
-                        self.setupCamera()
+                        guard let this = self else { return }
+                        this.setupCamera()
                     }
                 } else {
-                    print(granted)
+                    let alert = UIAlertController(title: self?.alertTitle,
+                                                  message: self?.alertMessage,
+                                                  preferredStyle: UIAlertController.Style.alert)
+                    alert.addAction(UIAlertAction(title: self?.alertConfirm, style: UIAlertAction.Style.default, handler: { (action) in
+                        guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else { return }
+                        if UIApplication.shared.canOpenURL(settingsUrl) {
+                            UIApplication.shared.open(settingsUrl, options: [:], completionHandler: { (success) in
+                                print("Scanner opened settings")
+                            })
+                        }
+                    }))
+                    alert.addAction(UIAlertAction(title: self?.alertCancel, style: UIAlertAction.Style.cancel, handler: { (action) in
+                        guard let this = self else { return }
+                        DispatchQueue.main.async {
+                            this.delegate?.sciBarcodeScannerCanceledPermissions()
+                        }
+                    }))
+                    DispatchQueue.main.async {
+                        guard let this = self else { return }
+                        guard let currentVC = this.currentTopViewController  else {
+                            print("Could not load current top view controller, also could not show alert")
+                            return
+                        }
+                        currentVC.present(alert, animated: true, completion: nil)
+                    }
                 }
             })
         }
+    }
+
+    public func setupAlertForSettings(title: String, message: String, confirm: String, cancel: String) {
+        self.alertTitle = title
+        self.alertMessage = message
+        self.alertConfirm = confirm
+        self.alertCancel = cancel
     }
 
     private func setupCamera() {
@@ -238,5 +276,4 @@ extension SCIBarcodeScannerView: AVCaptureMetadataOutputObjectsDelegate {
             }
         }
     }
-
 }
