@@ -4,6 +4,7 @@ import AVFoundation
 
 public protocol SCIBarcodeScannerViewDelegate {
     func sciBarcodeScannerViewReceived(code: String, type: String)
+    func sciBarcodeScannerCameraError()
     func sciBarcodeScannerPermissionMissing()
 }
 
@@ -123,6 +124,7 @@ public class SCIBarcodeScannerView: UIView {
         let deviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera], mediaType: AVMediaType.video, position: .back)
         guard let camera = deviceDiscoverySession.devices.first else {
             print("Failed to get the camera device")
+            delegate?.sciBarcodeScannerCameraError()
             return
         }
         self.captureDevice = camera
@@ -146,6 +148,7 @@ public class SCIBarcodeScannerView: UIView {
         } catch {
             // If any error occurs, simply print it out and don't continue any more.
             print(error)
+            delegate?.sciBarcodeScannerCameraError()
             return
         }
 
