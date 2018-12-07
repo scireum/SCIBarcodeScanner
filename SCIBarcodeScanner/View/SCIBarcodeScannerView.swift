@@ -21,6 +21,8 @@ public class SCIBarcodeScannerView: UIView {
 
     private let metadataQueue = DispatchQueue(label: "com.scireum.scanner.metadataQueue")
 
+    private var timer: Timer?
+
     private var standardImage: UIImage?
     private var successImage: UIImage?
 
@@ -180,7 +182,16 @@ extension SCIBarcodeScannerView: AVCaptureMetadataOutputObjectsDelegate {
 
         DispatchQueue.main.async {
             self.scanBox!.contents = self.successImage?.cgImage
-            self.delegate?.sciBarcodeScannerViewReceived(code: code, type: type)
+            if nil == self.timer {
+                self.timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { [weak self] (timer) in
+                    // reset the timer again
+                    self?.timer?.invalidate()
+                    self?.timer = nil
+
+                    // forward the result to the delegate
+                    self?.delegate?.sciBarcodeScannerViewReceived(code: code, type: type)
+                }
+            }
         }
     }
 
