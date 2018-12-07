@@ -10,7 +10,12 @@ class ViewController: UIViewController, SCIBarcodeScannerViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.scannerFrame.delegate = self
-        setTorchButtonTitle()
+
+        if !self.scannerFrame.isTorchModeAvailable {
+            self.navigationItem.rightBarButtonItem = nil
+        } else {
+            setTorchButtonTitle()
+        }
     }
 
     @IBAction func toggleTorch(_ sender: Any?) {
@@ -19,6 +24,8 @@ class ViewController: UIViewController, SCIBarcodeScannerViewDelegate {
     }
 
     private func setTorchButtonTitle() {
+        guard scannerFrame.isTorchModeAvailable else { return }
+
         switch scannerFrame.torchMode {
         case .on:
             torchButton.title = "Torch Off"
