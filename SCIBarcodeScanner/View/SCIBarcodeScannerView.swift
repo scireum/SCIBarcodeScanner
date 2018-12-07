@@ -18,6 +18,8 @@ public class SCIBarcodeScannerView: UIView {
 
     private var supportedCodeTypes: [AVMetadataObject.ObjectType]?
 
+    private var mostRecentCode: String?
+
     public var isTorchModeAvailable: Bool {
         get {
             guard let device = AVCaptureDevice.default(for: AVMediaType.video) else { return false }
@@ -173,16 +175,19 @@ extension SCIBarcodeScannerView: AVCaptureMetadataOutputObjectsDelegate {
         // check if the metadata objects array contains at least one sample, and obtain the most recent one
         guard let metadataObj = metadataObjects.last as? AVMetadataMachineReadableCodeObject else { return }
 
-        // make sure that we support the type
+        // obtain the type, and make sure that we support it
         let barcodeType = metadataObj.type
+        let type = barcodeType.rawValue
         guard supportedCodeTypes?.contains(barcodeType) == true else { return }
+
+        // obtain the code, and make sure that we haven't already seen it
+        guard let code = metadataObj.stringValue, mostRecentCode != code else { return }
 
         // make sure that the code is within the hot area
         guard let barcodeObject = videoPreviewLayer?.transformedMetadataObject(for: metadataObj), self.scanBox?.frame.contains(barcodeObject.bounds) == true else { return }
 
-        // resolve content and type to strings
-        guard let code = metadataObj.stringValue else { return }
-        let type = metadataObj.type.rawValue
+        // store the code as the most recent one
+        mostRecentCode = code
 
         self.scanBox!.contents = UIImage(named:"Success")?.cgImage
         self.delegate?.sciBarcodeScannerViewReceived(code: code, type: type)
