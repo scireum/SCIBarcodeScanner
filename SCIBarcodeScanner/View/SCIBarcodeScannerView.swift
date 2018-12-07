@@ -28,6 +28,7 @@ public class SCIBarcodeScannerView: UIView {
     private let metadataQueue = DispatchQueue(label: "com.scireum.scanner.metadataQueue")
 
     private var deliverTimer: Timer?
+    private var resetTimer: Timer?
 
     private var standardImage: UIImage?
     private var successImage: UIImage?
@@ -270,6 +271,19 @@ extension SCIBarcodeScannerView: AVCaptureMetadataOutputObjectsDelegate {
                     // reset the overlay
                     self?.scanBox!.contents = self?.standardImage?.cgImage
                 }
+            }
+
+            if nil != self.resetTimer {
+                self.resetTimer?.invalidate()
+                self.resetTimer = nil
+            }
+            self.resetTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { [weak self] (timer) in
+                // reset the timer again
+                self?.resetTimer?.invalidate()
+                self?.resetTimer = nil
+
+                // reset the most recent code
+                self?.mostRecentCode = nil
             }
         }
     }
