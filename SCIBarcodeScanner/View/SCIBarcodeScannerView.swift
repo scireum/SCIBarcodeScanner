@@ -204,6 +204,10 @@ public class SCIBarcodeScannerView: UIView {
             connection = nil
         }
 
+        CATransaction.begin();
+        CATransaction.setAnimationDuration(0.01)
+        CATransaction.setAnimationTimingFunction(CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut));
+
         switch UIDevice.current.orientation {
         case .portrait:
             connection?.videoOrientation = .portrait
@@ -223,6 +227,8 @@ public class SCIBarcodeScannerView: UIView {
         }
 
         videoLayer.frame = self.layer.bounds
+
+        CATransaction.commit()
     }
 }
 
