@@ -11,5 +11,5 @@ s.author       = { 'scireum' => 'info+dev@scireum.de'}
 s.source       = { :git => 'https://github.com/scireum/SCIBarcodeScanner.git', :tag => "#{s.version}" }
 s.source_files = 'SCIBarcodeScanner/**/*.{swift}'
 s.resources    = 'SCIBarcodeScanner/**/*.{png,jpeg,jpg,storyboard,xib,xcassets,pdf}'
-s.platform     = :ios, '9.0'
+s.platform     = :ios, '10.0'
 end
