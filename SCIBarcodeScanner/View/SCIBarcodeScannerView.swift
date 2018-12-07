@@ -101,11 +101,12 @@ public class SCIBarcodeScannerView: UIView {
                         }
                     }))
                     DispatchQueue.main.async {
-                        guard let topVC = UIApplication.shared.keyWindow?.rootViewController?.presentedViewController  else {
-                            print("Could not load TopViewController")
+                        guard let this = self else { return }
+                        guard let currentVC = this.currentTopViewController  else {
+                            print("Could not load current top view controller, also could not show alert")
                             return
                         }
-                        topVC.present(alert, animated: true, completion: nil)
+                        currentVC.present(alert, animated: true, completion: nil)
                     }
                 }
             })
