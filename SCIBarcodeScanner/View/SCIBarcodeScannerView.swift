@@ -10,10 +10,10 @@ public protocol SCIBarcodeScannerViewDelegate {
 public class SCIBarcodeScannerView: UIView {
     public var delegate: SCIBarcodeScannerViewDelegate?
 
-    private var alertTitle: String = "Camera access"
-    private var alertMessage: String = "In order for the barcode scanner to work, please allow access to the camera in the settings."
-    private var alertCancel: String = "Cancel"
-    private var alertConfirm: String = "Settings"
+    public var alertTitle: String = "Camera Access"
+    public var alertMessage: String = "In order for the barcode scanner to work, please allow access to the camera in the settings."
+    public var alertCancel: String = "Cancel"
+    public var alertConfirm: String = "Settings"
 
     private var captureSession: AVCaptureSession = AVCaptureSession()
     private var captureDevice: AVCaptureDevice?
@@ -27,7 +27,8 @@ public class SCIBarcodeScannerView: UIView {
 
     private let metadataQueue = DispatchQueue(label: "com.scireum.scanner.metadataQueue")
 
-    private var timer: Timer?
+    private var deliverTimer: Timer?
+    private var resetTimer: Timer?
 
     private var standardImage: UIImage?
     private var successImage: UIImage?
@@ -118,13 +119,6 @@ public class SCIBarcodeScannerView: UIView {
         }
     }
 
-    public func setupAlertForSettings(title: String, message: String, confirm: String, cancel: String) {
-        self.alertTitle = title
-        self.alertMessage = message
-        self.alertConfirm = confirm
-        self.alertCancel = cancel
-    }
-
     private func setupCamera() {
         let deviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera], mediaType: AVMediaType.video, position: .back)
         guard let camera = deviceDiscoverySession.devices.first else {
@@ -204,21 +198,38 @@ public class SCIBarcodeScannerView: UIView {
     }
 
     private func rotateVideoLayer() {
-        guard let videoLayer = self.videoPreviewLayer else {
-            return
+        guard let videoLayer = self.videoPreviewLayer else { return }
+
+        var connection = videoLayer.connection
+        if connection?.isVideoOrientationSupported != true {
+            connection = nil
+        }
+
+        CATransaction.begin();
+        CATransaction.setAnimationDuration(0.01)
+        CATransaction.setAnimationTimingFunction(CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut));
+
+        switch UIDevice.current.orientation {
+        case .portrait:
+            connection?.videoOrientation = .portrait
+            videoLayer.transform = CATransform3DMakeRotation(0.degreesToRadians, 0, 0, 1)
+        case .landscapeLeft:
+            connection?.videoOrientation = .portraitUpsideDown
+            videoLayer.transform = CATransform3DMakeRotation(90.degreesToRadians, 0, 0, 1)
+        case .landscapeRight:
+            connection?.videoOrientation = .portraitUpsideDown
+            videoLayer.transform = CATransform3DMakeRotation(270.degreesToRadians, 0, 0, 1)
+        case .portraitUpsideDown:
+            connection?.videoOrientation = .portrait
+            videoLayer.transform = CATransform3DMakeRotation(180.degreesToRadians, 0, 0, 1)
+        default:
+            connection?.videoOrientation = .portrait
+            videoLayer.transform = CATransform3DMakeRotation(0.degreesToRadians, 0, 0, 1)
         }
 
         videoLayer.frame = self.layer.bounds
 
-        if let connection = videoLayer.connection, connection.isVideoOrientationSupported {
-            switch UIDevice.current.orientation {
-                case .portrait: connection.videoOrientation = .portrait
-                case .landscapeRight: connection.videoOrientation = .landscapeRight
-                case .landscapeLeft: connection.videoOrientation = .landscapeLeft
-                case .portraitUpsideDown: connection.videoOrientation = .portraitUpsideDown
-                default: connection.videoOrientation = .portrait
-            }
-        }
+        CATransaction.commit()
     }
 }
 
@@ -248,11 +259,11 @@ extension SCIBarcodeScannerView: AVCaptureMetadataOutputObjectsDelegate {
             self.scanBox!.contents = self.successImage?.cgImage
             AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
 
-            if nil == self.timer {
-                self.timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { [weak self] (timer) in
+            if nil == self.deliverTimer {
+                self.deliverTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { [weak self] (timer) in
                     // reset the timer again
-                    self?.timer?.invalidate()
-                    self?.timer = nil
+                    self?.deliverTimer?.invalidate()
+                    self?.deliverTimer = nil
 
                     // forward the result to the delegate
                     self?.delegate?.sciBarcodeScannerViewReceived(code: code, type: type)
@@ -260,6 +271,19 @@ extension SCIBarcodeScannerView: AVCaptureMetadataOutputObjectsDelegate {
                     // reset the overlay
                     self?.scanBox!.contents = self?.standardImage?.cgImage
                 }
+            }
+
+            if nil != self.resetTimer {
+                self.resetTimer?.invalidate()
+                self.resetTimer = nil
+            }
+            self.resetTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { [weak self] (timer) in
+                // reset the timer again
+                self?.resetTimer?.invalidate()
+                self?.resetTimer = nil
+
+                // reset the most recent code
+                self?.mostRecentCode = nil
             }
         }
     }
