@@ -173,7 +173,7 @@ public class SCIBarcodeScannerView: UIView {
         videoLayer.frame = self.layer.bounds
 
         if let connection = videoLayer.connection, connection.isVideoOrientationSupported {
-            switch UIApplication.shared.statusBarOrientation {
+            switch UIDevice.current.orientation {
                 case .portrait: connection.videoOrientation = .portrait
                 case .landscapeRight: connection.videoOrientation = .landscapeRight
                 case .landscapeLeft: connection.videoOrientation = .landscapeLeft
