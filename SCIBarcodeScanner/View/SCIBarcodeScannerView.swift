@@ -50,7 +50,7 @@ public class SCIBarcodeScannerView: UIView {
         }
     }
 
-    public func setCodesTypes(avmetaDataArray: [AVMetadataObject.ObjectType]) {
+    public func setCodeTypes(avmetaDataArray: [AVMetadataObject.ObjectType]) {
         self.supportedCodeTypes = avmetaDataArray
     }
 
