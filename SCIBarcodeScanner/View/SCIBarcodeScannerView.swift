@@ -189,6 +189,7 @@ extension SCIBarcodeScannerView: AVCaptureMetadataOutputObjectsDelegate {
                     self?.timer = nil
 
                     // forward the result to the delegate
+                    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
                     self?.delegate?.sciBarcodeScannerViewReceived(code: code, type: type)
                 }
             }
