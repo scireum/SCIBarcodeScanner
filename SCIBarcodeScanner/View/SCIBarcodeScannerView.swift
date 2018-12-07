@@ -19,6 +19,8 @@ public class SCIBarcodeScannerView: UIView {
 
     private var mostRecentCode: String?
 
+    private let metadataQueue = DispatchQueue(label: "com.scireum.scanner.metadataQueue")
+
     public var isTorchModeAvailable: Bool {
         get {
             guard let device = AVCaptureDevice.default(for: AVMediaType.video) else { return false }
@@ -109,7 +111,7 @@ public class SCIBarcodeScannerView: UIView {
             self.captureSession.addOutput(captureMetadataOutput)
 
             // Set delegate and use the default dispatch queue to execute the call back
-            captureMetadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
+            captureMetadataOutput.setMetadataObjectsDelegate(self, queue: self.metadataQueue)
             captureMetadataOutput.metadataObjectTypes = supportedCodeTypes
 
         } catch {
@@ -188,8 +190,10 @@ extension SCIBarcodeScannerView: AVCaptureMetadataOutputObjectsDelegate {
         // store the code as the most recent one
         mostRecentCode = code
 
-        self.scanBox!.contents = UIImage(named:"Success")?.cgImage
-        self.delegate?.sciBarcodeScannerViewReceived(code: code, type: type)
+        DispatchQueue.main.async {
+            self.scanBox!.contents = UIImage(named:"Success")?.cgImage
+            self.delegate?.sciBarcodeScannerViewReceived(code: code, type: type)
+        }
     }
 
 }
