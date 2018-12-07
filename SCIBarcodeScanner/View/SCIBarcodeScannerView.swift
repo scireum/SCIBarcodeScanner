@@ -2,37 +2,48 @@ import Foundation
 import UIKit
 import AVFoundation
 
-public enum BarcodeScannerMode {
-    case singleShot
-}
-
 public protocol SCIBarcodeScannerViewDelegate {
     func sciBarcodeScannerViewReceived(code: String, type: String)
-    func sciBarcodeScannerViewCanceled()
 }
 
 public class SCIBarcodeScannerView: UIView {
     public var delegate: SCIBarcodeScannerViewDelegate?
+
     private var captureSession: AVCaptureSession = AVCaptureSession()
     private var captureDevice: AVCaptureDevice?
+
     private var videoPreviewLayer: AVCaptureVideoPreviewLayer?
+    private var scanBox: CALayer?
 
     private var supportedCodeTypes: [AVMetadataObject.ObjectType]?
-    public var scanBox: CALayer?
 
-    public var scanMode: BarcodeScannerMode = .singleShot
+    private var mostRecentCode: String?
+
+    private let metadataQueue = DispatchQueue(label: "com.scireum.scanner.metadataQueue")
+
+    private var timer: Timer?
+
+    private var standardImage: UIImage?
+    private var successImage: UIImage?
 
     public var isTorchModeAvailable: Bool {
         get {
             guard let device = AVCaptureDevice.default(for: AVMediaType.video) else { return false }
-            return device.hasTorch
+            return device.hasTorch && device.isTorchAvailable
         }
     }
 
     public var torchMode: TorchMode = .off {
         didSet {
-            guard let captureDevice = self.captureDevice, captureDevice.hasTorch else { return }
+            // make sure that we have a device...
+            guard let captureDevice = self.captureDevice else { return }
+
+            // ...with a torch that is available...
+            guard captureDevice.hasTorch, captureDevice.isTorchAvailable else { return }
+
+            // ...and that supports the given mode
             guard captureDevice.isTorchModeSupported(torchMode.captureTorchMode) else { return }
+
             do {
                 try captureDevice.lockForConfiguration()
                 captureDevice.torchMode = torchMode.captureTorchMode
@@ -41,7 +52,7 @@ public class SCIBarcodeScannerView: UIView {
         }
     }
 
-    public func setCodesTypes(avmetaDataArray: [AVMetadataObject.ObjectType]) {
+    public func setCodeTypes(avmetaDataArray: [AVMetadataObject.ObjectType]) {
         self.supportedCodeTypes = avmetaDataArray
     }
 
@@ -77,20 +88,12 @@ public class SCIBarcodeScannerView: UIView {
     }
 
     private func setupCamera() {
-        if #available(iOS 10.0, *) {
-            let deviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera], mediaType: AVMediaType.video, position: .back)
-            guard let camera = deviceDiscoverySession.devices.first else {
-                print("Failed to get the camera device")
-                return
-            }
-            self.captureDevice = camera
-        } else {
-            guard let camera = getDevice(position: .back) else {
-                print("Failed to get the camera device")
-                return
-            }
-            self.captureDevice = camera
+        let deviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera], mediaType: AVMediaType.video, position: .back)
+        guard let camera = deviceDiscoverySession.devices.first else {
+            print("Failed to get the camera device")
+            return
         }
+        self.captureDevice = camera
 
         do {
 
@@ -105,7 +108,7 @@ public class SCIBarcodeScannerView: UIView {
             self.captureSession.addOutput(captureMetadataOutput)
 
             // Set delegate and use the default dispatch queue to execute the call back
-            captureMetadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
+            captureMetadataOutput.setMetadataObjectsDelegate(self, queue: self.metadataQueue)
             captureMetadataOutput.metadataObjectTypes = supportedCodeTypes
 
         } catch {
@@ -129,21 +132,14 @@ public class SCIBarcodeScannerView: UIView {
         self.torchMode = .off
     }
 
-    private func getDevice(position: AVCaptureDevice.Position) -> AVCaptureDevice? {
-        let devices = AVCaptureDevice.devices()
-        for device in devices {
-            let deviceConverted = device
-            if(deviceConverted.position == position){
-                return deviceConverted
-            }
-        }
-        return nil
-    }
-
     private func setupScanBox() {
+        let bundle = Bundle(for: type(of: self))
+        standardImage = UIImage(named: "Standard", in: bundle, compatibleWith: nil)
+        successImage = UIImage(named: "Success", in: bundle, compatibleWith: nil)
+
         scanBox = CALayer()
         if let box = self.scanBox {
-            box.contents = UIImage(named: "Standard")?.cgImage
+            box.contents = standardImage?.cgImage
             box.contentsGravity = .resizeAspect
             self.videoPreviewLayer?.addSublayer(box)
         }
@@ -162,28 +158,46 @@ public class SCIBarcodeScannerView: UIView {
     }
 }
 
+// MARK: - AVCaptureMetadataOutputObjectsDelegate
+
 extension SCIBarcodeScannerView: AVCaptureMetadataOutputObjectsDelegate {
+
     public func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
-        // Check if the metadataObjects array is not nil and it contains at least one object.
-        if metadataObjects.count == 0 {
-            return
-        } else {
-            // Get the metadata object.
-            if let metadataObj: AVMetadataMachineReadableCodeObject = metadataObjects.first as? AVMetadataMachineReadableCodeObject {
-                if supportedCodeTypes?.contains(metadataObj.type) ?? false {
-                    if let barCodeObject = videoPreviewLayer?.transformedMetadataObject(for: metadataObj) {
-                        if self.scanBox?.frame.contains(barCodeObject.bounds) ?? false {
-                            if metadataObj.stringValue != nil {
-                                if self.scanMode == .singleShot {
-                                    self.stopCapture()
-                                }
-                                self.scanBox!.contents = UIImage(named:"Success")?.cgImage
-                                self.delegate?.sciBarcodeScannerViewReceived(code: metadataObj.stringValue!, type: metadataObj.type.rawValue)
-                            }
-                        }
-                    }
+        // check if the metadata objects array contains at least one sample, and obtain the most recent one
+        guard let metadataObj = metadataObjects.last as? AVMetadataMachineReadableCodeObject else { return }
+
+        // obtain the type, and make sure that we support it
+        let barcodeType = metadataObj.type
+        let type = barcodeType.rawValue
+        guard supportedCodeTypes?.contains(barcodeType) == true else { return }
+
+        // obtain the code, and make sure that we haven't already seen it
+        guard let code = metadataObj.stringValue, mostRecentCode != code else { return }
+
+        // make sure that the code is within the hot area
+        guard let barcodeObject = videoPreviewLayer?.transformedMetadataObject(for: metadataObj), self.scanBox?.frame.contains(barcodeObject.bounds) == true else { return }
+
+        // store the code as the most recent one
+        mostRecentCode = code
+
+        DispatchQueue.main.async {
+            self.scanBox!.contents = self.successImage?.cgImage
+            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+
+            if nil == self.timer {
+                self.timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { [weak self] (timer) in
+                    // reset the timer again
+                    self?.timer?.invalidate()
+                    self?.timer = nil
+
+                    // forward the result to the delegate
+                    self?.delegate?.sciBarcodeScannerViewReceived(code: code, type: type)
+
+                    // reset the overlay
+                    self?.scanBox!.contents = self?.standardImage?.cgImage
                 }
             }
         }
     }
+
 }
