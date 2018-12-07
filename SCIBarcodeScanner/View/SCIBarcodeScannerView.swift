@@ -217,10 +217,8 @@ public class SCIBarcodeScannerView: UIView {
             self.videoPreviewLayer?.transform = CATransform3DMakeRotation(0.degreesToRadians, 0, 0, 1)
         }
         self.videoPreviewLayer?.frame = self.layer.bounds
-//        guard let videoLayer = self.videoPreviewLayer else {
-//            return
-//        }
-//
+
+//        guard let videoLayer = self.videoPreviewLayer else { return }
 //        videoLayer.frame = self.layer.bounds
 //
 //        if let connection = videoLayer.connection, connection.isVideoOrientationSupported {
