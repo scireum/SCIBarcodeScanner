@@ -58,7 +58,7 @@ extension AVMetadataObject.ObjectType {
                 //case kBarcodeFormatRSSExpanded: return "RSS_EXPANDED";
                 //case kBarcodeFormatUPCA: return "UPC_A";
             //case kBarcodeFormatUPCEANExtension: return "UPC_EAN_EXTENSION";
-            default: return ""
+            default: return self.rawValue
         }
     }
 
