@@ -118,13 +118,6 @@ public class SCIBarcodeScannerView: UIView {
         }
     }
 
-    public func setupAlertForSettings(title: String, message: String, confirm: String, cancel: String) {
-        self.alertTitle = title
-        self.alertMessage = message
-        self.alertConfirm = confirm
-        self.alertCancel = cancel
-    }
-
     private func setupCamera() {
         let deviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera], mediaType: AVMediaType.video, position: .back)
         guard let camera = deviceDiscoverySession.devices.first else {
