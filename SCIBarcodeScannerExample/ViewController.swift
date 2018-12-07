@@ -1,7 +1,7 @@
 import UIKit
 import SCIBarcodeScanner
 
-class ViewController: UIViewController, SCIBarcodeScannerViewDelegate {
+class ViewController: UIViewController {
 
     @IBOutlet var scannerFrame: SCIBarcodeScannerView!
     @IBOutlet var torchButton: UIBarButtonItem!
@@ -33,6 +33,9 @@ class ViewController: UIViewController, SCIBarcodeScannerViewDelegate {
             torchButton.title = "Torch On"
         }
     }
+}
+
+extension ViewController: SCIBarcodeScannerViewDelegate {
 
     func sciBarcodeScannerViewReceived(code: String, type: String) {
         scannerFrame.stopCapture()
