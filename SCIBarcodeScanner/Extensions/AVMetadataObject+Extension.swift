@@ -21,4 +21,16 @@ extension AVMetadataObject.ObjectType {
         AVMetadataObject.ObjectType.qr,
         AVMetadataObject.ObjectType.upce
     ]
+
+    /**
+     List of codes that should minimally be supported for applications related to trading of actual goods.
+     */
+    public static let minimal = [
+        AVMetadataObject.ObjectType.ean13,
+        AVMetadataObject.ObjectType.ean8,
+        AVMetadataObject.ObjectType.code128,
+        AVMetadataObject.ObjectType.qr,
+        AVMetadataObject.ObjectType.interleaved2of5,
+        AVMetadataObject.ObjectType.dataMatrix
+    ]
 }
