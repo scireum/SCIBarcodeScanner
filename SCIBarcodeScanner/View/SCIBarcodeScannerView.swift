@@ -197,32 +197,32 @@ public class SCIBarcodeScannerView: UIView {
     }
 
     private func rotateVideoLayer() {
+        guard let videoLayer = self.videoPreviewLayer else { return }
+
+        var connection = videoLayer.connection
+        if connection?.isVideoOrientationSupported != true {
+            connection = nil
+        }
+
         switch UIDevice.current.orientation {
         case .portrait:
-            self.videoPreviewLayer?.transform = CATransform3DMakeRotation(0.degreesToRadians, 0, 0, 1)
+            connection?.videoOrientation = .portrait
+            videoLayer.transform = CATransform3DMakeRotation(0.degreesToRadians, 0, 0, 1)
         case .landscapeLeft:
-            self.videoPreviewLayer?.transform = CATransform3DMakeRotation(270.degreesToRadians, 0, 0, 1)
+            connection?.videoOrientation = .portraitUpsideDown
+            videoLayer.transform = CATransform3DMakeRotation(90.degreesToRadians, 0, 0, 1)
         case .landscapeRight:
-            self.videoPreviewLayer?.transform = CATransform3DMakeRotation(90.degreesToRadians, 0, 0, 1)
+            connection?.videoOrientation = .portraitUpsideDown
+            videoLayer.transform = CATransform3DMakeRotation(270.degreesToRadians, 0, 0, 1)
         case .portraitUpsideDown:
-            self.videoPreviewLayer?.transform = CATransform3DMakeRotation(180.degreesToRadians, 0, 0, 1)
+            connection?.videoOrientation = .portrait
+            videoLayer.transform = CATransform3DMakeRotation(180.degreesToRadians, 0, 0, 1)
         default:
-            self.videoPreviewLayer?.transform = CATransform3DMakeRotation(0.degreesToRadians, 0, 0, 1)
+            connection?.videoOrientation = .portrait
+            videoLayer.transform = CATransform3DMakeRotation(0.degreesToRadians, 0, 0, 1)
         }
-        self.videoPreviewLayer?.frame = self.layer.bounds
 
-//        guard let videoLayer = self.videoPreviewLayer else { return }
-//        videoLayer.frame = self.layer.bounds
-//
-//        if let connection = videoLayer.connection, connection.isVideoOrientationSupported {
-//            switch UIDevice.current.orientation {
-//                case .portrait: connection.videoOrientation = .portrait
-//                case .landscapeRight: connection.videoOrientation = .landscapeRight
-//                case .landscapeLeft: connection.videoOrientation = .landscapeLeft
-//                case .portraitUpsideDown: connection.videoOrientation = .portraitUpsideDown
-//                default: connection.videoOrientation = .portrait
-//            }
-//        }
+        videoLayer.frame = self.layer.bounds
     }
 }
 
