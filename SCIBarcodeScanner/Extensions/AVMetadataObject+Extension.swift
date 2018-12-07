@@ -5,7 +5,7 @@ extension AVMetadataObject.ObjectType {
     /**
      List of all supported code types.
      */
-    public static var all = [
+    public static let all = [
         AVMetadataObject.ObjectType.aztec,
         AVMetadataObject.ObjectType.code128,
         AVMetadataObject.ObjectType.code39,
