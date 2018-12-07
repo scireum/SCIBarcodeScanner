@@ -191,6 +191,9 @@ extension SCIBarcodeScannerView: AVCaptureMetadataOutputObjectsDelegate {
                     // forward the result to the delegate
                     AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
                     self?.delegate?.sciBarcodeScannerViewReceived(code: code, type: type)
+
+                    // reset the overlay
+                    self?.scanBox!.contents = self?.standardImage?.cgImage
                 }
             }
         }
