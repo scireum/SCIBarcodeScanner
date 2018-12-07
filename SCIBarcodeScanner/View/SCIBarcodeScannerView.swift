@@ -21,14 +21,21 @@ public class SCIBarcodeScannerView: UIView {
     public var isTorchModeAvailable: Bool {
         get {
             guard let device = AVCaptureDevice.default(for: AVMediaType.video) else { return false }
-            return device.hasTorch
+            return device.hasTorch && device.isTorchAvailable
         }
     }
 
     public var torchMode: TorchMode = .off {
         didSet {
-            guard let captureDevice = self.captureDevice, captureDevice.hasTorch else { return }
+            // make sure that we have a device...
+            guard let captureDevice = self.captureDevice else { return }
+
+            // ...with a torch that is available...
+            guard captureDevice.hasTorch, captureDevice.isTorchAvailable else { return }
+
+            // ...and that supports the given mode
             guard captureDevice.isTorchModeSupported(torchMode.captureTorchMode) else { return }
+
             do {
                 try captureDevice.lockForConfiguration()
                 captureDevice.torchMode = torchMode.captureTorchMode
