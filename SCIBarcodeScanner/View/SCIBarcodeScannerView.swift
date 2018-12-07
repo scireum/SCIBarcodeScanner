@@ -166,21 +166,34 @@ public class SCIBarcodeScannerView: UIView {
     }
 
     private func rotateVideoLayer() {
-        guard let videoLayer = self.videoPreviewLayer else {
-            return
+        switch UIDevice.current.orientation {
+        case .portrait:
+            self.videoPreviewLayer?.transform = CATransform3DMakeRotation(0.degreesToRadians, 0, 0, 1)
+        case .landscapeLeft:
+            self.videoPreviewLayer?.transform = CATransform3DMakeRotation(270.degreesToRadians, 0, 0, 1)
+        case .landscapeRight:
+            self.videoPreviewLayer?.transform = CATransform3DMakeRotation(90.degreesToRadians, 0, 0, 1)
+        case .portraitUpsideDown:
+            self.videoPreviewLayer?.transform = CATransform3DMakeRotation(180.degreesToRadians, 0, 0, 1)
+        default:
+            self.videoPreviewLayer?.transform = CATransform3DMakeRotation(0.degreesToRadians, 0, 0, 1)
         }
-
-        videoLayer.frame = self.layer.bounds
-
-        if let connection = videoLayer.connection, connection.isVideoOrientationSupported {
-            switch UIDevice.current.orientation {
-                case .portrait: connection.videoOrientation = .portrait
-                case .landscapeRight: connection.videoOrientation = .landscapeRight
-                case .landscapeLeft: connection.videoOrientation = .landscapeLeft
-                case .portraitUpsideDown: connection.videoOrientation = .portraitUpsideDown
-                default: connection.videoOrientation = .portrait
-            }
-        }
+        self.videoPreviewLayer?.frame = self.layer.bounds
+//        guard let videoLayer = self.videoPreviewLayer else {
+//            return
+//        }
+//
+//        videoLayer.frame = self.layer.bounds
+//
+//        if let connection = videoLayer.connection, connection.isVideoOrientationSupported {
+//            switch UIDevice.current.orientation {
+//                case .portrait: connection.videoOrientation = .portrait
+//                case .landscapeRight: connection.videoOrientation = .landscapeRight
+//                case .landscapeLeft: connection.videoOrientation = .landscapeLeft
+//                case .portraitUpsideDown: connection.videoOrientation = .portraitUpsideDown
+//                default: connection.videoOrientation = .portrait
+//            }
+//        }
     }
 }
 
