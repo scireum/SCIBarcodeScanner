@@ -4,6 +4,7 @@ import AVFoundation
 
 public protocol SCIBarcodeScannerViewDelegate {
     func sciBarcodeScannerViewReceived(code: String, type: String)
+    func sciBarcodeScannerCanceledPermissions()
 }
 
 public class SCIBarcodeScannerView: UIView {
@@ -75,13 +76,37 @@ public class SCIBarcodeScannerView: UIView {
         if AVCaptureDevice.authorizationStatus(for: .video) ==  .authorized {
             setupCamera()
         } else {
-            AVCaptureDevice.requestAccess(for: .video, completionHandler: { (granted: Bool) in
+            AVCaptureDevice.requestAccess(for: .video, completionHandler: { [weak self] (granted: Bool) in
                 if granted {
                     DispatchQueue.main.async {
-                        self.setupCamera()
+                        guard let this = self else { return }
+                        this.setupCamera()
                     }
                 } else {
-                    print(granted)
+                    let alert = UIAlertController(title: NSLocalizedString("camera.authorization.title", comment: ""),
+                                                  message: NSLocalizedString("camera.authorization.reason", comment: ""),
+                                                  preferredStyle: UIAlertController.Style.alert)
+                    alert.addAction(UIAlertAction(title: NSLocalizedString("camera.authorization.settings", comment: ""), style: UIAlertAction.Style.default, handler: { (action) in
+                        guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else { return }
+                        if UIApplication.shared.canOpenURL(settingsUrl) {
+                            UIApplication.shared.open(settingsUrl, options: [:], completionHandler: { (success) in
+                                print("Scanner opened settings")
+                            })
+                        }
+                    }))
+                    alert.addAction(UIAlertAction(title: NSLocalizedString("generic.cancel", comment: ""), style: UIAlertAction.Style.cancel, handler: { (action) in
+                        guard let this = self else { return }
+                        DispatchQueue.main.async {
+                            this.delegate?.sciBarcodeScannerCanceledPermissions()
+                        }
+                    }))
+                    DispatchQueue.main.async {
+                        guard let topVC = UIApplication.shared.keyWindow?.rootViewController?.presentedViewController  else {
+                            print("Could not load TopViewController")
+                            return
+                        }
+                        topVC.present(alert, animated: true, completion: nil)
+                    }
                 }
             })
         }
@@ -225,5 +250,4 @@ extension SCIBarcodeScannerView: AVCaptureMetadataOutputObjectsDelegate {
             }
         }
     }
-
 }
