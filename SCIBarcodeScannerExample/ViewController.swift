@@ -41,4 +41,8 @@ extension ViewController: SCIBarcodeScannerViewDelegate {
         scannerFrame.stopCapture()
         print(code)
     }
+
+    func sciBarcodeScannerCanceledPermissions() {
+        print("Canceled settings permissions")
+    }
 }
