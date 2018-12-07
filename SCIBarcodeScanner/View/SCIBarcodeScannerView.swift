@@ -170,24 +170,22 @@ public class SCIBarcodeScannerView: UIView {
 extension SCIBarcodeScannerView: AVCaptureMetadataOutputObjectsDelegate {
 
     public func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
-        // Check if the metadataObjects array is not nil and it contains at least one object.
-        if metadataObjects.count == 0 {
-            return
-        } else {
-            // Get the metadata object.
-            if let metadataObj: AVMetadataMachineReadableCodeObject = metadataObjects.first as? AVMetadataMachineReadableCodeObject {
-                if supportedCodeTypes?.contains(metadataObj.type) ?? false {
-                    if let barCodeObject = videoPreviewLayer?.transformedMetadataObject(for: metadataObj) {
-                        if self.scanBox?.frame.contains(barCodeObject.bounds) ?? false {
-                            if metadataObj.stringValue != nil {
-                                self.scanBox!.contents = UIImage(named:"Success")?.cgImage
-                                self.delegate?.sciBarcodeScannerViewReceived(code: metadataObj.stringValue!, type: metadataObj.type.rawValue)
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        // check if the metadata objects array contains at least one sample, and obtain the most recent one
+        guard let metadataObj = metadataObjects.last as? AVMetadataMachineReadableCodeObject else { return }
+
+        // make sure that we support the type
+        let barcodeType = metadataObj.type
+        guard supportedCodeTypes?.contains(barcodeType) == true else { return }
+
+        // make sure that the code is within the hot area
+        guard let barcodeObject = videoPreviewLayer?.transformedMetadataObject(for: metadataObj), self.scanBox?.frame.contains(barcodeObject.bounds) == true else { return }
+
+        // resolve content and type to strings
+        guard let code = metadataObj.stringValue else { return }
+        let type = metadataObj.type.rawValue
+
+        self.scanBox!.contents = UIImage(named:"Success")?.cgImage
+        self.delegate?.sciBarcodeScannerViewReceived(code: code, type: type)
     }
 
 }
