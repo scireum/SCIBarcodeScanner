@@ -4,7 +4,7 @@ import AVFoundation
 
 public protocol SCIBarcodeScannerViewDelegate {
     func sciBarcodeScannerViewReceived(code: String, type: String)
-    func sciBarcodeScannerCanceledPermissions()
+    func sciBarcodeScannerPermissionMissing()
 }
 
 public class SCIBarcodeScannerView: UIView {
@@ -103,7 +103,7 @@ public class SCIBarcodeScannerView: UIView {
                     alert.addAction(UIAlertAction(title: self?.alertCancel, style: UIAlertAction.Style.cancel, handler: { (action) in
                         guard let this = self else { return }
                         DispatchQueue.main.async {
-                            this.delegate?.sciBarcodeScannerCanceledPermissions()
+                            this.delegate?.sciBarcodeScannerPermissionMissing()
                         }
                     }))
                     DispatchQueue.main.async {
