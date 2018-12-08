@@ -212,14 +212,17 @@ public class SCIBarcodeScannerView: UIView {
         CATransaction.setAnimationDuration(0.01)
         CATransaction.setAnimationTimingFunction(CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut));
 
+        var transpose = false
         switch UIDevice.current.orientation {
         case .portrait:
             connection?.videoOrientation = .portrait
             videoLayer.transform = CATransform3DMakeRotation(0.degreesToRadians, 0, 0, 1)
         case .landscapeLeft:
+            transpose = true
             connection?.videoOrientation = .portraitUpsideDown
             videoLayer.transform = CATransform3DMakeRotation(90.degreesToRadians, 0, 0, 1)
         case .landscapeRight:
+            transpose = true
             connection?.videoOrientation = .portraitUpsideDown
             videoLayer.transform = CATransform3DMakeRotation(270.degreesToRadians, 0, 0, 1)
         case .portraitUpsideDown:
@@ -231,6 +234,13 @@ public class SCIBarcodeScannerView: UIView {
         }
 
         videoLayer.frame = self.layer.bounds
+
+        if transpose {
+            scanBox?.position.x = videoLayer.position.y
+            scanBox?.position.y = videoLayer.position.x
+        } else {
+            scanBox?.position = videoLayer.position
+        }
 
         CATransaction.commit()
     }
