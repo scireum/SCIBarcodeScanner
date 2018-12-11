@@ -168,9 +168,8 @@ public class SCIBarcodeScannerView: UIView {
     }
 
     private func setupScanBox() {
-        let bundle = Bundle(for: type(of: self))
-        standardImage = UIImage(named: "Standard", in: bundle, compatibleWith: nil)
-        successImage = UIImage(named: "Success", in: bundle, compatibleWith: nil)
+        standardImage = Helper.getImageFromPod(named: "Standard")
+        successImage = Helper.getImageFromPod(named: "Success")
 
         scanBox = CALayer()
         if let box = self.scanBox {
