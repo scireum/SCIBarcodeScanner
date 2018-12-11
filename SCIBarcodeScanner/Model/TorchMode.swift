@@ -18,6 +18,18 @@ public enum TorchMode {
     }
 
     /**
+     Returns the torch image
+     */
+    public var image: UIImage{
+        switch self {
+        case .on:
+            return Helper.getImageFromPod(named: "flash")
+        case .off:
+            return Helper.getImageFromPod(named: "flash")
+        }
+    }
+
+    /**
      Returns the matching low-level torch mode.
      */
     var captureTorchMode: AVCaptureDevice.TorchMode {

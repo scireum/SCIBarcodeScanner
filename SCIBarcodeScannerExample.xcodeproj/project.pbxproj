@@ -7,15 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		303B50EAB110CB30E3D71901 /* libPods-SCIBarcodeScannerExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FA18265C81D5A3D5B5B2DDA7 /* libPods-SCIBarcodeScannerExample.a */; };
 		4678186D21B95B59002ACD4A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4678186C21B95B59002ACD4A /* AppDelegate.swift */; };
 		4678186F21B95B59002ACD4A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4678186E21B95B59002ACD4A /* ViewController.swift */; };
 		4678187221B95B59002ACD4A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4678187021B95B59002ACD4A /* Main.storyboard */; };
 		4678187421B95B5A002ACD4A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4678187321B95B5A002ACD4A /* Assets.xcassets */; };
 		4678187721B95B5A002ACD4A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4678187521B95B5A002ACD4A /* LaunchScreen.storyboard */; };
+		D14116BC58DA49DE83F986B2 /* Pods_SCIBarcodeScannerExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C11BA1AD25D1A4C68EE9EAA /* Pods_SCIBarcodeScannerExample.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2C11BA1AD25D1A4C68EE9EAA /* Pods_SCIBarcodeScannerExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SCIBarcodeScannerExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		38C835DBF27D4D2155942C85 /* Pods-SCIBarcodeScannerExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SCIBarcodeScannerExample.release.xcconfig"; path = "Pods/Target Support Files/Pods-SCIBarcodeScannerExample/Pods-SCIBarcodeScannerExample.release.xcconfig"; sourceTree = "<group>"; };
 		4678186921B95B59002ACD4A /* SCIBarcodeScannerExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SCIBarcodeScannerExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4678186C21B95B59002ACD4A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -25,7 +26,6 @@
 		4678187621B95B5A002ACD4A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4678187821B95B5A002ACD4A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F2370BE8D79CC63CA9B17792 /* Pods-SCIBarcodeScannerExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SCIBarcodeScannerExample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SCIBarcodeScannerExample/Pods-SCIBarcodeScannerExample.debug.xcconfig"; sourceTree = "<group>"; };
-		FA18265C81D5A3D5B5B2DDA7 /* libPods-SCIBarcodeScannerExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SCIBarcodeScannerExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,7 +33,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				303B50EAB110CB30E3D71901 /* libPods-SCIBarcodeScannerExample.a in Frameworks */,
+				D14116BC58DA49DE83F986B2 /* Pods_SCIBarcodeScannerExample.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,7 +83,7 @@
 		85789E3D04A9617B9D760C63 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				FA18265C81D5A3D5B5B2DDA7 /* libPods-SCIBarcodeScannerExample.a */,
+				2C11BA1AD25D1A4C68EE9EAA /* Pods_SCIBarcodeScannerExample.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -99,7 +99,7 @@
 				4678186521B95B59002ACD4A /* Sources */,
 				4678186621B95B59002ACD4A /* Frameworks */,
 				4678186721B95B59002ACD4A /* Resources */,
-				0116D1018FEB315F0905BE4D /* [CP] Copy Pods Resources */,
+				17F32326899A6D976C84AE21 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -157,7 +157,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0116D1018FEB315F0905BE4D /* [CP] Copy Pods Resources */ = {
+		17F32326899A6D976C84AE21 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -165,22 +165,18 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-SCIBarcodeScannerExample/Pods-SCIBarcodeScannerExample-resources.sh",
-				"${PODS_ROOT}/../SCIBarcodeScanner/Resources/Assets.xcassets/Standard.imageset/Standard.pdf",
-				"${PODS_ROOT}/../SCIBarcodeScanner/Resources/Assets.xcassets/Success.imageset/Success.pdf",
-				"${PODS_ROOT}/../SCIBarcodeScanner/Resources/Assets.xcassets",
+				"${SRCROOT}/Pods/Target Support Files/Pods-SCIBarcodeScannerExample/Pods-SCIBarcodeScannerExample-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/SCIBarcodeScanner/SCIBarcodeScanner.framework",
 			);
-			name = "[CP] Copy Pods Resources";
+			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Standard.pdf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Success.pdf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.car",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SCIBarcodeScanner.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SCIBarcodeScannerExample/Pods-SCIBarcodeScannerExample-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SCIBarcodeScannerExample/Pods-SCIBarcodeScannerExample-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		3BC8626388811AC2C2A1E778 /* [CP] Check Pods Manifest.lock */ = {
