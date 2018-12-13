@@ -160,6 +160,7 @@ public class SCIBarcodeScannerView: UIView {
 
         self.startCapture()
         self.setupScanBox()
+        self.rotateVideoLayer()
     }
 
     private func startCapture() {
