@@ -1,0 +1,6 @@
+"camera.authorization.title" = "Kamerazugriff";
+"camera.authorization.reason" = "Bitte erlauben Sie den Zugriff auf die Kamera in den Einstellungen, damit der Barcodescanner funktioniert.";
+"camera.authorization.settings" = "Einstellungen";
+"generic.cancel" = "Abbrechen";
+
+
