@@ -2,10 +2,11 @@ import Foundation
 import UIKit
 import AVFoundation
 
-public protocol SCIBarcodeScannerViewDelegate {
+@objc public protocol SCIBarcodeScannerViewDelegate {
     func sciBarcodeScannerViewReceived(code: String, type: String)
-    func sciBarcodeScannerCameraError()
-    func sciBarcodeScannerPermissionMissing()
+    @objc optional func sciBarcodeScannerCameraError()
+    @objc optional func sciBarcodeScannerPermissionMissing()
+    @objc optional func sciBarCodeScannerOpenSettings()
 }
 
 public class SCIBarcodeScannerView: UIView {
@@ -93,18 +94,18 @@ public class SCIBarcodeScannerView: UIView {
                     let alert = UIAlertController(title: self?.alertTitle,
                                                   message: self?.alertMessage,
                                                   preferredStyle: UIAlertController.Style.alert)
-                    alert.addAction(UIAlertAction(title: self?.alertConfirm, style: UIAlertAction.Style.default, handler: { (action) in
+                    alert.addAction(UIAlertAction(title: self?.alertConfirm, style: UIAlertAction.Style.default, handler: { _ in
                         guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else { return }
                         if UIApplication.shared.canOpenURL(settingsUrl) {
-                            UIApplication.shared.open(settingsUrl, options: [:], completionHandler: { (success) in
-                                print("Scanner opened settings")
+                            UIApplication.shared.open(settingsUrl, options: [:], completionHandler: { _ in
+                                self?.delegate?.sciBarCodeScannerOpenSettings!()
                             })
                         }
                     }))
-                    alert.addAction(UIAlertAction(title: self?.alertCancel, style: UIAlertAction.Style.cancel, handler: { (action) in
+                    alert.addAction(UIAlertAction(title: self?.alertCancel, style: UIAlertAction.Style.cancel, handler: { _ in
                         guard let this = self else { return }
                         DispatchQueue.main.async {
-                            this.delegate?.sciBarcodeScannerPermissionMissing()
+                            this.delegate?.sciBarcodeScannerPermissionMissing!()
                         }
                     }))
                     DispatchQueue.main.async {
@@ -124,7 +125,7 @@ public class SCIBarcodeScannerView: UIView {
         let deviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera], mediaType: AVMediaType.video, position: .back)
         guard let camera = deviceDiscoverySession.devices.first else {
             print("Failed to get the camera device")
-            delegate?.sciBarcodeScannerCameraError()
+            delegate?.sciBarcodeScannerCameraError!()
             return
         }
         self.captureDevice = camera
@@ -148,7 +149,7 @@ public class SCIBarcodeScannerView: UIView {
         } catch {
             // If any error occurs, simply print it out and don't continue any more.
             print(error)
-            delegate?.sciBarcodeScannerCameraError()
+            delegate?.sciBarcodeScannerCameraError!()
             return
         }
 
