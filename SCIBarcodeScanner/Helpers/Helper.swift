@@ -21,19 +21,20 @@ class Helper {
     }
 
 
-    static func localizedString(_ key: String, comment: String? = nil) -> String {
-        // Main Bundle
-        let stringMainBundle = NSLocalizedString(key, tableName: "Localizable", bundle: Bundle.main, value: "", comment: comment ?? "")
-        if stringMainBundle != key {
-            return stringMainBundle
-        } else {
-            // Pods Bundle
-            let stringPodsBundle = NSLocalizedString(key, tableName: "Localizable", bundle: Bundle(for: SCIBarcodeScannerView.self), value: "", comment: "")
-            if stringPodsBundle != key {
-                return stringPodsBundle
-            }
+    static func localizedStringFrom(bundle: Bundle ,_ key: String, comment: String? = nil) -> String {
+        let stringFromBundle = NSLocalizedString(key, tableName: "Localizable", bundle: bundle, value: "", comment: comment ?? "")
+        if stringFromBundle != key {
+            return stringFromBundle
         }
         return key
+    }
+
+    static func getLocalizedStringFrom(key: String?, backUpKey: String) -> String {
+        if let keyString: String = key{
+            return self.localizedStringFrom(bundle: Bundle.main, keyString)
+        } else {
+            return self.localizedStringFrom(bundle: Bundle.init(for: SCIBarcodeScannerView.self), backUpKey)
+        }
     }
 
 }

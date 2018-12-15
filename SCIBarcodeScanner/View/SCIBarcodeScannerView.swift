@@ -8,33 +8,40 @@ public protocol SCIBarcodeScannerViewDelegate {
     func sciBarcodeScannerPermissionMissing()
 }
 
+enum AlertStrings: String {
+    case title = "camera.authorization.title"
+    case message = "camera.authorization.reason"
+    case confirm = "camera.authorization.settings"
+    case cancel = "generic.cancel"
+}
+
 public class SCIBarcodeScannerView: UIView {
     public var delegate: SCIBarcodeScannerViewDelegate?
 
-//    @IBInspectable var alertTitleLocalizableKey: String = "camera.authorization.title" {
-//        didSet {
-//            self.alertTitle = alertTitleLocalizableKey
-//        }
-//    }
-//    @IBInspectable var alertMessageLocalizableKey: String = "camera.authorization.reason" {
-//        didSet {
-//            self.alertMessage = alertMessageLocalizableKey
-//        }
-//    }
-//    @IBInspectable var alertCancelLocalizableKey: String = "generic.cancel" {
-//        didSet {
-//            self.alertCancel = alertCancelLocalizableKey
-//        }
-//    }
-//    @IBInspectable var alertConfirmLocalizableKey: String = "camera.authorization.settings" {
-//        didSet {
-//            self.alertConfirm = alertConfirmLocalizableKey
-//        }
-//    }
-    private var alertTitle: String = "camera.authorization.title"
-    private var alertMessage: String = "camera.authorization.reason"
-    private var alertCancel: String = "generic.cancel"
-    private var alertConfirm: String = "camera.authorization.settings"
+    @IBInspectable public var alertTitleLocalizableKey: String? {
+        didSet {
+            self.alertTitle = alertTitleLocalizableKey?.replacingOccurrences(of: "\"", with: "")
+        }
+    }
+    @IBInspectable public var alertMessageLocalizableKey: String? {
+        didSet {
+            self.alertMessage = alertMessageLocalizableKey?.replacingOccurrences(of: "\"", with: "")
+        }
+    }
+    @IBInspectable public var alertCancelLocalizableKey: String? {
+        didSet {
+            self.alertCancel = alertCancelLocalizableKey?.replacingOccurrences(of: "\"", with: "")
+        }
+    }
+    @IBInspectable public var alertConfirmLocalizableKey: String? {
+        didSet {
+            self.alertConfirm = alertConfirmLocalizableKey?.replacingOccurrences(of: "\"", with: "")
+        }
+    }
+    private var alertTitle: String?
+    private var alertMessage: String?
+    private var alertCancel: String?
+    private var alertConfirm: String?
 
     private var captureSession: AVCaptureSession = AVCaptureSession()
     private var captureDevice: AVCaptureDevice?
@@ -110,34 +117,37 @@ public class SCIBarcodeScannerView: UIView {
                         this.setupCamera()
                     }
                 } else {
-                    let alert = UIAlertController(title: Helper.localizedString((self?.alertTitle)!),
-                                                  message: Helper.localizedString((self?.alertMessage)!),
-                                                  preferredStyle: UIAlertController.Style.alert)
-                    alert.addAction(UIAlertAction(title: Helper.localizedString((self?.alertConfirm)!), style: UIAlertAction.Style.default, handler: { (action) in
-                        guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else { return }
-                        if UIApplication.shared.canOpenURL(settingsUrl) {
-                            UIApplication.shared.open(settingsUrl, options: [:], completionHandler: { (success) in
-                                print("Scanner opened settings")
-                            })
-                        }
-                    }))
-                    alert.addAction(UIAlertAction(title: Helper.localizedString((self?.alertCancel)!), style: UIAlertAction.Style.cancel, handler: { (action) in
-                        guard let this = self else { return }
-                        DispatchQueue.main.async {
-                            this.delegate?.sciBarcodeScannerPermissionMissing()
-                        }
-                    }))
                     DispatchQueue.main.async {
                         guard let this = self else { return }
                         guard let currentVC = this.currentTopViewController  else {
                             print("Could not load current top view controller, also could not show alert")
                             return
                         }
-                        currentVC.present(alert, animated: true, completion: nil)
+                        currentVC.present(this.createAlert(), animated: true, completion: nil)
                     }
                 }
             })
         }
+    }
+
+    private func createAlert() -> UIAlertController {
+        let alert = UIAlertController(title: Helper.getLocalizedStringFrom(key: self.alertTitle, backUpKey: AlertStrings.title.rawValue),
+                                      message: Helper.getLocalizedStringFrom(key: self.alertMessage, backUpKey: AlertStrings.message.rawValue),
+                                      preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: Helper.getLocalizedStringFrom(key: self.alertConfirm, backUpKey: AlertStrings.confirm.rawValue), style: UIAlertAction.Style.default, handler: { (action) in
+            guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else { return }
+            if UIApplication.shared.canOpenURL(settingsUrl) {
+                UIApplication.shared.open(settingsUrl, options: [:], completionHandler: { (success) in
+                    print("Scanner opened settings")
+                })
+            }
+        }))
+        alert.addAction(UIAlertAction(title: Helper.getLocalizedStringFrom(key: self.alertCancel, backUpKey: AlertStrings.cancel.rawValue), style: UIAlertAction.Style.cancel, handler: { (action) in
+            DispatchQueue.main.async {
+                self.delegate?.sciBarcodeScannerPermissionMissing()
+            }
+        }))
+        return alert
     }
 
     private func setupCamera() {
