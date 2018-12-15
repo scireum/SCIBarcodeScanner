@@ -1,3 +1,7 @@
+#if canImport(UIKit)
+import UIKit
+#endif
+
 extension UIView {
     /**
      Variable for current top view controller.
