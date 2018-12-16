@@ -1,4 +1,4 @@
-"camera.authorization.title" = "Camera access";
-"camera.authorization.reason" = "In order for the barcode scanner to work, please allow access to the camera in the settings.";
-"camera.authorization.settings" = "Settings";
-"generic.cancel" = "Cancel";
+"camera.alert.title" = "Camera access";
+"camera.alert.message" = "In order for the barcode scanner to work, please allow access to the camera in the settings.";
+"camera.alert.action.settings" = "Settings";
+"camera.alert.action.cancel" = "Cancel";
