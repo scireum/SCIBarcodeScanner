@@ -1,4 +1,4 @@
-"ccamera.alert.title" = "Kamerazugriff";
+"camera.alert.title" = "Kamerazugriff";
 "camera.alert.message" = "Bitte erlauben Sie den Zugriff auf die Kamera in den Einstellungen, damit der Barcodescanner funktioniert.";
 "camera.alert.action.settings" = "Einstellungen";
 "camera.alert.action.cancel" = "Abbrechen";

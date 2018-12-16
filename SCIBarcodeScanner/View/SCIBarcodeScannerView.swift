@@ -10,7 +10,7 @@ public protocol SCIBarcodeScannerViewDelegate {
 
 enum AlertStrings: String {
     case title = "camera.alert.title"
-    case message = "ccamera.alert.message"
+    case message = "camera.alert.message"
     case confirm = "camera.alert.action.settings"
     case cancel = "camera.alert.action.cancel"
 }
