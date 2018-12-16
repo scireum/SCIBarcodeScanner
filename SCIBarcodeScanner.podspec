@@ -10,6 +10,6 @@ s.license      = { :type => 'MIT' }
 s.author       = { 'scireum' => 'info+dev@scireum.de'}
 s.source       = { :git => 'https://github.com/scireum/SCIBarcodeScanner.git', :tag => "#{s.version}" }
 s.source_files = 'SCIBarcodeScanner/**/*.{swift}'
-s.resources    = 'SCIBarcodeScanner/**/*.{png,jpeg,jpg,storyboard,xib,xcassets,pdf}'
+s.resources    = 'SCIBarcodeScanner/**/*.{png,jpeg,jpg,storyboard,xib,xcassets,pdf,strings,lproj}'
 s.platform     = :ios, '10.0'
 end

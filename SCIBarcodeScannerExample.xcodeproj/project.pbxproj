@@ -12,6 +12,7 @@
 		4678187221B95B59002ACD4A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4678187021B95B59002ACD4A /* Main.storyboard */; };
 		4678187421B95B5A002ACD4A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4678187321B95B5A002ACD4A /* Assets.xcassets */; };
 		4678187721B95B5A002ACD4A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4678187521B95B5A002ACD4A /* LaunchScreen.storyboard */; };
+		46D4366621C3CCD500311CE1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 46D4366821C3CCD500311CE1 /* Localizable.strings */; };
 		D14116BC58DA49DE83F986B2 /* Pods_SCIBarcodeScannerExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C11BA1AD25D1A4C68EE9EAA /* Pods_SCIBarcodeScannerExample.framework */; };
 /* End PBXBuildFile section */
 
@@ -25,6 +26,8 @@
 		4678187321B95B5A002ACD4A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4678187621B95B5A002ACD4A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4678187821B95B5A002ACD4A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		46D4366721C3CCD500311CE1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		46D4366921C3CCE400311CE1 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F2370BE8D79CC63CA9B17792 /* Pods-SCIBarcodeScannerExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SCIBarcodeScannerExample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SCIBarcodeScannerExample/Pods-SCIBarcodeScannerExample.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -76,6 +79,7 @@
 				4678187321B95B5A002ACD4A /* Assets.xcassets */,
 				4678187521B95B5A002ACD4A /* LaunchScreen.storyboard */,
 				4678187821B95B5A002ACD4A /* Info.plist */,
+				46D4366821C3CCD500311CE1 /* Localizable.strings */,
 			);
 			path = SCIBarcodeScannerExample;
 			sourceTree = "<group>";
@@ -132,6 +136,7 @@
 			knownRegions = (
 				en,
 				Base,
+				de,
 			);
 			mainGroup = 4678186021B95B59002ACD4A;
 			productRefGroup = 4678186A21B95B59002ACD4A /* Products */;
@@ -149,6 +154,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4678187721B95B5A002ACD4A /* LaunchScreen.storyboard in Resources */,
+				46D4366621C3CCD500311CE1 /* Localizable.strings in Resources */,
 				4678187421B95B5A002ACD4A /* Assets.xcassets in Resources */,
 				4678187221B95B59002ACD4A /* Main.storyboard in Resources */,
 			);
@@ -232,6 +238,15 @@
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
+		46D4366821C3CCD500311CE1 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				46D4366721C3CCD500311CE1 /* en */,
+				46D4366921C3CCE400311CE1 /* de */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -239,6 +254,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -300,6 +316,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
