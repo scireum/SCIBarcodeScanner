@@ -145,7 +145,7 @@ public class SCIBarcodeScannerView: UIView {
         }))
         alert.addAction(UIAlertAction(title: Helper.getLocalizedStringFrom(key: self.alertCancel, backUpKey: AlertStrings.cancel.rawValue), style: UIAlertAction.Style.cancel, handler: { (action) in
             DispatchQueue.main.async {
-                self.delegate?.sciBarcodeScannerPermissionMissing()
+                self.delegate?.sciBarcodeScannerPermissionMissing?()
             }
         }))
         return alert
@@ -155,7 +155,7 @@ public class SCIBarcodeScannerView: UIView {
         let deviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera], mediaType: AVMediaType.video, position: .back)
         guard let camera = deviceDiscoverySession.devices.first else {
             print("Failed to get the camera device")
-            delegate?.sciBarcodeScannerCameraError!()
+            delegate?.sciBarcodeScannerCameraError?()
             return
         }
         self.captureDevice = camera
@@ -179,7 +179,7 @@ public class SCIBarcodeScannerView: UIView {
         } catch {
             // If any error occurs, simply print it out and don't continue any more.
             print(error)
-            delegate?.sciBarcodeScannerCameraError!()
+            delegate?.sciBarcodeScannerCameraError?()
             return
         }
 
