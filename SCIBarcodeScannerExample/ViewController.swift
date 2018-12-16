@@ -52,4 +52,7 @@ extension ViewController: SCIBarcodeScannerViewDelegate {
     func sciBarcodeScannerPermissionMissing() {
         print("Permission missing.")
     }
+    func sciBarCodeScannerOpenSettings() {
+        print("Scanner opened Settings.")
+    }
 }
