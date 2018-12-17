@@ -9,6 +9,7 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
         self.scannerFrame.delegate = self
 
         if !self.scannerFrame.isTorchModeAvailable {
@@ -36,6 +37,10 @@ class ViewController: UIViewController {
         case .off:
             torchButton.title = "Torch On"
         }
+    }
+
+    @objc private func applicationWillEnterForeground() {
+        setTorchButtonTitle()
     }
 }
 

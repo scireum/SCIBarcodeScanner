@@ -99,6 +99,7 @@ public class SCIBarcodeScannerView: UIView {
     }
 
     public override func willMove(toSuperview newSuperview: UIView?) {
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
         self.setupCodeTypes()
         self.checkPermissions()
     }
@@ -225,6 +226,10 @@ public class SCIBarcodeScannerView: UIView {
                                     size: CGSize(width: width, height: width))
             scanBox?.position = preview.position
         }
+    }
+
+    @objc private func applicationWillEnterForeground() {
+        self.torchMode = .off
     }
 
     public override func layoutSubviews() {
