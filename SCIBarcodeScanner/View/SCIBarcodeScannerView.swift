@@ -139,7 +139,7 @@ public class SCIBarcodeScannerView: UIView {
             guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else { return }
             if UIApplication.shared.canOpenURL(settingsUrl) {
                 UIApplication.shared.open(settingsUrl, options: [:], completionHandler: { (success) in
-                    print("Scanner opened settings")
+                    self.delegate?.sciBarCodeScannerOpenSettings?()
                 })
             }
         }))
