@@ -192,7 +192,6 @@ public class SCIBarcodeScannerView: UIView {
 
         self.startCapture()
         self.setupScanBox()
-        self.rotateVideoLayer()
     }
 
     private func startCapture() {
@@ -239,33 +238,23 @@ public class SCIBarcodeScannerView: UIView {
     private func rotateVideoLayer() {
         guard let videoLayer = self.videoPreviewLayer else { return }
 
-        var connection = videoLayer.connection
-        if connection?.isVideoOrientationSupported != true {
-            connection = nil
-        }
-
         CATransaction.begin();
         CATransaction.setAnimationDuration(0.01)
         CATransaction.setAnimationTimingFunction(CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut));
 
         var transpose = false
-        switch UIDevice.current.orientation {
+        switch UIApplication.shared.statusBarOrientation {
         case .portrait:
-            connection?.videoOrientation = .portrait
             videoLayer.transform = CATransform3DMakeRotation(0.degreesToRadians, 0, 0, 1)
         case .landscapeLeft:
             transpose = true
-            connection?.videoOrientation = .portraitUpsideDown
             videoLayer.transform = CATransform3DMakeRotation(90.degreesToRadians, 0, 0, 1)
         case .landscapeRight:
             transpose = true
-            connection?.videoOrientation = .portraitUpsideDown
             videoLayer.transform = CATransform3DMakeRotation(270.degreesToRadians, 0, 0, 1)
         case .portraitUpsideDown:
-            connection?.videoOrientation = .portrait
             videoLayer.transform = CATransform3DMakeRotation(180.degreesToRadians, 0, 0, 1)
         default:
-            connection?.videoOrientation = .portrait
             videoLayer.transform = CATransform3DMakeRotation(0.degreesToRadians, 0, 0, 1)
         }
 
