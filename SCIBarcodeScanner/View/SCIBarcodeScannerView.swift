@@ -108,7 +108,7 @@ public class SCIBarcodeScannerView: UIView {
     }
 
     @objc private func orientationDidChanged() {
-            self.rotateVideoLayer()
+        self.rotateVideoLayer()
     }
 
     public func toggleTorch() {
