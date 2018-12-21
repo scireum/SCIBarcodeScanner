@@ -100,15 +100,15 @@ public class SCIBarcodeScannerView: UIView {
 
     public override func willMove(toSuperview newSuperview: UIView?) {
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(changed), name: UIDevice.orientationDidChangeNotification, object: nil)
+        if (self.currentTopViewController?.shouldAutorotate ?? true) {
+            NotificationCenter.default.addObserver(self, selector: #selector(orientationDidChanged), name: UIDevice.orientationDidChangeNotification, object: nil)
+        }
         self.setupCodeTypes()
         self.checkPermissions()
     }
 
-    @objc private func changed() {
-        if (self.currentTopViewController?.shouldAutorotate ?? true) {
+    @objc private func orientationDidChanged() {
             self.rotateVideoLayer()
-        }
     }
 
     public func toggleTorch() {
