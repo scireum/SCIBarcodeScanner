@@ -100,8 +100,15 @@ public class SCIBarcodeScannerView: UIView {
 
     public override func willMove(toSuperview newSuperview: UIView?) {
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+        if (self.currentTopViewController?.shouldAutorotate ?? true) {
+            NotificationCenter.default.addObserver(self, selector: #selector(orientationDidChange), name: UIDevice.orientationDidChangeNotification, object: nil)
+        }
         self.setupCodeTypes()
         self.checkPermissions()
+    }
+
+    @objc private func orientationDidChange() {
+        self.rotateVideoLayer()
     }
 
     public func toggleTorch() {
@@ -192,7 +199,6 @@ public class SCIBarcodeScannerView: UIView {
 
         self.startCapture()
         self.setupScanBox()
-        self.rotateVideoLayer()
     }
 
     private func startCapture() {
@@ -236,7 +242,7 @@ public class SCIBarcodeScannerView: UIView {
         self.rotateVideoLayer()
     }
 
-    private func rotateVideoLayer() {
+    public func rotateVideoLayer() {
         guard let videoLayer = self.videoPreviewLayer else { return }
 
         var connection = videoLayer.connection
@@ -265,8 +271,25 @@ public class SCIBarcodeScannerView: UIView {
             connection?.videoOrientation = .portrait
             videoLayer.transform = CATransform3DMakeRotation(180.degreesToRadians, 0, 0, 1)
         default:
-            connection?.videoOrientation = .portrait
-            videoLayer.transform = CATransform3DMakeRotation(0.degreesToRadians, 0, 0, 1)
+            switch UIApplication.shared.statusBarOrientation {
+            case .portrait:
+                connection?.videoOrientation = .portrait
+                videoLayer.transform = CATransform3DMakeRotation(0.degreesToRadians, 0, 0, 1)
+            case .landscapeLeft:
+                transpose = true
+                connection?.videoOrientation = .portrait
+                videoLayer.transform = CATransform3DMakeRotation(90.degreesToRadians, 0, 0, 1)
+            case .landscapeRight:
+                transpose = true
+                connection?.videoOrientation = .portrait
+                videoLayer.transform = CATransform3DMakeRotation(270.degreesToRadians, 0, 0, 1)
+            case .portraitUpsideDown:
+                connection?.videoOrientation = .portrait
+                videoLayer.transform = CATransform3DMakeRotation(180.degreesToRadians, 0, 0, 1)
+            default:
+                print("Unkown orientation")
+            }
+
         }
 
         videoLayer.frame = self.layer.bounds
