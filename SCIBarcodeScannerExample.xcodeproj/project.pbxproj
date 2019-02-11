@@ -171,7 +171,7 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-SCIBarcodeScannerExample/Pods-SCIBarcodeScannerExample-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-SCIBarcodeScannerExample/Pods-SCIBarcodeScannerExample-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/SCIBarcodeScanner/SCIBarcodeScanner.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -182,7 +182,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SCIBarcodeScannerExample/Pods-SCIBarcodeScannerExample-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SCIBarcodeScannerExample/Pods-SCIBarcodeScannerExample-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		3BC8626388811AC2C2A1E778 /* [CP] Check Pods Manifest.lock */ = {
