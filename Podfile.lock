@@ -1,5 +1,5 @@
 PODS:
-  - SCIBarcodeScanner (2.0.4)
+  - SCIBarcodeScanner (2.0.5)
 
 DEPENDENCIES:
   - SCIBarcodeScanner (from `.`)
@@ -9,8 +9,8 @@ EXTERNAL SOURCES:
     :path: "."
 
 SPEC CHECKSUMS:
-  SCIBarcodeScanner: afe66ba5ba57a31732a44d8a7788d835424d3d58
+  SCIBarcodeScanner: c89200faed449eeffabaa05741956ecb65c6fad1
 
 PODFILE CHECKSUM: 28048d3c9f7f26182d71030118d6106b39ef1e76
 
-COCOAPODS: 1.6.0
+COCOAPODS: 1.6.1
