@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 s.name         = 'SCIBarcodeScanner'
-s.version      = '2.0.5'
+s.version      = '2.0.6'
 s.summary      = 'Barcode scanner'
 s.swift_version = '5.0'
 s.description  = <<-DESC
